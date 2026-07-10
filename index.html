@@ -325,41 +325,68 @@
         body.dark .filter-row label {
             color: #a8c3e6;
         }
-        .team-selector, .nationality-selector, .value-selector, .season-selector {
+        .team-selector,
+        .nationality-selector,
+        .value-selector,
+        .season-selector {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 14px;
             transition: border-color 0.3s, background-color 0.3s, color 0.3s;
         }
-        body.dark .team-selector, body.dark .nationality-selector, body.dark .value-selector, body.dark .season-selector {
+        body.dark .team-selector,
+        body.dark .nationality-selector,
+        body.dark .value-selector,
+        body.dark .season-selector {
             border-color: #555;
             background-color: #333;
             color: #ddd;
         }
-        .team-selector, .nationality-selector, .value-selector, .season-selector {
+        .team-selector,
+        .nationality-selector,
+        .value-selector,
+        .season-selector {
             scrollbar-width: thin;
             scrollbar-color: #1a365d #f0f0f0;
         }
-        body.dark .team-selector, body.dark .nationality-selector, body.dark .value-selector, body.dark .season-selector {
+        body.dark .team-selector,
+        body.dark .nationality-selector,
+        body.dark .value-selector,
+        body.dark .season-selector {
             scrollbar-color: #2c5282 #444;
         }
-        .team-selector::-webkit-scrollbar, .nationality-selector::-webkit-scrollbar, .value-selector::-webkit-scrollbar, .season-selector::-webkit-scrollbar {
+        .team-selector::-webkit-scrollbar,
+        .nationality-selector::-webkit-scrollbar,
+        .value-selector::-webkit-scrollbar,
+        .season-selector::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
-        .team-selector::-webkit-scrollbar-track, .nationality-selector::-webkit-scrollbar-track, .value-selector::-webkit-scrollbar-track, .season-selector::-webkit-scrollbar-track {
+        .team-selector::-webkit-scrollbar-track,
+        .nationality-selector::-webkit-scrollbar-track,
+        .value-selector::-webkit-scrollbar-track,
+        .season-selector::-webkit-scrollbar-track {
             background: #f0f0f0;
             border-radius: 4px;
         }
-        body.dark .team-selector::-webkit-scrollbar-track, body.dark .nationality-selector::-webkit-scrollbar-track, body.dark .value-selector::-webkit-scrollbar-track, body.dark .season-selector::-webkit-scrollbar-track {
+        body.dark .team-selector::-webkit-scrollbar-track,
+        body.dark .nationality-selector::-webkit-scrollbar-track,
+        body.dark .value-selector::-webkit-scrollbar-track,
+        body.dark .season-selector::-webkit-scrollbar-track {
             background: #444;
         }
-        .team-selector::-webkit-scrollbar-thumb, .nationality-selector::-webkit-scrollbar-thumb, .value-selector::-webkit-scrollbar-thumb, .season-selector::-webkit-scrollbar-thumb {
+        .team-selector::-webkit-scrollbar-thumb,
+        .nationality-selector::-webkit-scrollbar-thumb,
+        .value-selector::-webkit-scrollbar-thumb,
+        .season-selector::-webkit-scrollbar-thumb {
             background: #1a365d;
             border-radius: 4px;
         }
-        body.dark .team-selector::-webkit-scrollbar-thumb, body.dark .nationality-selector::-webkit-scrollbar-thumb, body.dark .value-selector::-webkit-scrollbar-thumb, body.dark .season-selector::-webkit-scrollbar-thumb {
+        body.dark .team-selector::-webkit-scrollbar-thumb,
+        body.dark .nationality-selector::-webkit-scrollbar-thumb,
+        body.dark .value-selector::-webkit-scrollbar-thumb,
+        body.dark .season-selector::-webkit-scrollbar-thumb {
             background: #2c5282;
         }
         .team-selector {
@@ -473,13 +500,13 @@
             background: white;
             border-radius: 10px;
             padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             display: none;
             transition: background-color 0.3s;
         }
         body.dark .advanced-search-content {
             background: #2a2a2a;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
         .advanced-search-content.show {
             display: block;
@@ -581,7 +608,7 @@
         .slider-container {
             position: relative;
             height: 30px;
-            margin: 20px 0;
+            margin: 20px 0 10px 0;
         }
         .slider-track {
             position: absolute;
@@ -619,7 +646,7 @@
             transform: translateY(-50%);
             cursor: pointer;
             z-index: 2;
-            transition: background-color 0.3s, left 0.05s ease-out;
+            transition: background-color 0.3s;
         }
         body.dark .slider-thumb {
             background: #2c5282;
@@ -644,6 +671,38 @@
             transition: color 0.3s;
         }
         body.dark .age-values {
+            color: #aaa;
+        }
+        .slider-ticks {
+            position: relative;
+            height: 18px;
+            margin-top: 2px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0;
+        }
+        .tick-mark {
+            position: relative;
+            width: 1px;
+            background: #aaa;
+            height: 10px;
+            margin: 0 auto;
+            transition: background-color 0.3s;
+        }
+        body.dark .tick-mark {
+            background: #777;
+        }
+        .tick-label {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: #888;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+        body.dark .tick-label {
             color: #aaa;
         }
         .attribute-filters {
@@ -688,7 +747,7 @@
         .attribute-slider-container {
             position: relative;
             height: 20px;
-            margin: 10px 0;
+            margin: 10px 0 5px 0;
         }
         .attribute-slider-track {
             position: absolute;
@@ -710,7 +769,6 @@
             height: 4px;
             border-radius: 2px;
             transform: translateY(-50%);
-            transition: left 0.05s ease-out, width 0.05s ease-out;
         }
         #gk-range {
             background: #28a745;
@@ -733,18 +791,21 @@
             transform: translateY(-50%);
             cursor: pointer;
             z-index: 2;
-            transition: left 0.05s ease-out;
         }
-        #gk-thumb-min, #gk-thumb-max {
+        #gk-thumb-min,
+        #gk-thumb-max {
             background: #28a745;
         }
-        #df-thumb-min, #df-thumb-max {
+        #df-thumb-min,
+        #df-thumb-max {
             background: #007bff;
         }
-        #mf-thumb-min, #mf-thumb-max {
+        #mf-thumb-min,
+        #mf-thumb-max {
             background: #ffc107;
         }
-        #fw-thumb-min, #fw-thumb-max {
+        #fw-thumb-min,
+        #fw-thumb-max {
             background: #dc3545;
         }
         .attribute-slider-thumb::after {
@@ -767,6 +828,37 @@
             transition: color 0.3s;
         }
         body.dark .attribute-values {
+            color: #aaa;
+        }
+        .attr-ticks {
+            position: relative;
+            height: 14px;
+            margin-top: 1px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .attr-tick-mark {
+            position: relative;
+            width: 1px;
+            background: #bbb;
+            height: 8px;
+            margin: 0 auto;
+            transition: background-color 0.3s;
+        }
+        body.dark .attr-tick-mark {
+            background: #777;
+        }
+        .attr-tick-label {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 7px;
+            color: #999;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+        body.dark .attr-tick-label {
             color: #aaa;
         }
         .experience-input {
@@ -873,8 +965,12 @@
             border-top-color: transparent;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
         .modal {
             position: fixed;
@@ -883,14 +979,14 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             display: none;
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s;
         }
         body.dark .modal {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
         }
         .modal-content {
             background: white;
@@ -900,14 +996,14 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s, box-shadow 0.3s;
             scrollbar-width: thin;
             scrollbar-color: #1a365d #f0f0f0;
         }
         body.dark .modal-content {
             background: #2a2a2a;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             scrollbar-color: #2c5282 #444;
         }
         .modal-content::-webkit-scrollbar {
@@ -947,12 +1043,12 @@
         .team-header img[alt*="stadium"] {
             border: 2px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         body.dark .team-header img[alt*="stadium"] {
             border-color: #555;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
         #darkModeToggle {
             position: absolute;
@@ -967,13 +1063,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s, box-shadow 0.3s;
             padding: 0;
         }
         #darkModeToggle:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
         #darkModeToggle svg {
             width: 24px;
@@ -998,12 +1094,12 @@
             border-radius: 30px;
             cursor: pointer;
             font-weight: 600;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s, box-shadow 0.2s;
         }
         #tsmButton:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
         .team-player {
             margin-bottom: 10px;
@@ -1077,12 +1173,14 @@
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        th, td {
+        th,
+        td {
             padding: 8px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
-        body.dark th, body.dark td {
+        body.dark th,
+        body.dark td {
             border-bottom-color: #444;
         }
         th {
@@ -1100,12 +1198,14 @@
             width: 100%;
             border-collapse: collapse;
         }
-        .squad-table th, .squad-table td {
+        .squad-table th,
+        .squad-table td {
             padding: 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
-        body.dark .squad-table th, body.dark .squad-table td {
+        body.dark .squad-table th,
+        body.dark .squad-table td {
             border-bottom-color: #444;
         }
         .squad-table th {
@@ -1136,338 +1236,317 @@
             border-color: #555;
             color: #ddd;
         }
-    </style>      
+    </style>
 </head>
 <body>
     <div id="fullscreen-link" style="display: none; position: absolute; top: 10px; left: 10px; background: #1a365d; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; transition: background-color 0.3s;">
-        ↗ Ver en pantalla completa                  
+        ↗ Ver en pantalla completa
     </div>
-                 
+
     <button id="toggle-card-size" style="display: none; position: absolute; top: 40px; left: 10px; background: linear-gradient(145deg, #3498db, #2980b9); color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 14px; font-weight: 600; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;">
-        Aumentar tarjetas             
+        Aumentar tarjetas
     </button>
-    <select id="season-select" class="season-selector" style="position: absolute; top: 90px; left: 10px; width: 180px; background: linear-gradient(145deg, #34495e, #2c3e50); color: white; border: none; padding: 8px 12px; border-radius: 30px; font-size: 14px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-        <option value="37-start" selected>Temporada 37 (Inicio)</option>
-        <option value="current">Temporada actual</option>
-        <option value="36">Temporada 36 (Final)</option>
-        <option value="36-start">Temporada 36 (Inicio)</option>
-    </select>                
+    <select id="season-select" class="season-selector" style="position: absolute; top: 90px; left: 10px; width: 210px; background: linear-gradient(145deg, #34495e, #2c3e50); color: white; border: none; padding: 8px 12px; border-radius: 30px; font-size: 14px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+        <option value="37-mid" selected>Temporada 37 - Intermedio</option>
+        <option value="37-start">Temporada 37 - Inicio</option>
+        <option value="36">Temporada 36 - Final</option>
+        <option value="36-start">Temporada 36 - Inicio</option>
+    </select>
     <button id="darkModeToggle">
-        <svg viewbox="0 0 24 24" style="width: 24px; height: 24px;">        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"></path>    </svg>
+        <svg viewbox="0 0 24 24" style="width: 24px; height: 24px;">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"></path>
+        </svg>
     </button>
-                      
+
     <button id="tsmButton">
-        Ir a TSM                  
+        Ir a TSM
     </button>
-                      
+
     <h1>
-        Buscador de jugadores                  
+        Buscador de jugadores
     </h1>
-          
+
     <div class="search-container">
-        <input placeholder="Buscar jugador por nombre..." id="search" type="text" />                                
+        <input placeholder="Buscar jugador por nombre..." id="search" type="text" />
         <button id="search-clear" class="search-clear">
-            ×                          
+            ×
         </button>
     </div>
-    <!-- Nota informativa (visible solo en móviles) -->
     <div id="search-note" class="search-note">💻 Para una carga más fiable y completa, se recomienda usar un PC</div>
-          
+
     <div id="update-info" class="update-info">
-                                 
     </div>
-          
+
     <div class="advanced-search-container">
-                                                      
+
         <button id="advanced-search-toggle" class="advanced-search-toggle">
-            Búsqueda avanzada             <span class="arrow down">▼</span>                                
+            Búsqueda avanzada <span class="arrow down">▼</span>
         </button>
-                                               
+
         <div id="advanced-search-content" class="advanced-search-content">
-                                                          
+
             <div class="filter-row">
-                <label for="team-select">Equipo:</label>                <select class="team-selector" id="team-select">
+                <label for="team-select">Equipo:</label>
+                <select class="team-selector" id="team-select">
                     <option value="">Todos los equipos</option>
-                </select>                                                        
+                </select>
                 <button title="Reiniciar selección" id="reset-team" class="reset-button">
-                    ×                                          
+                    ×
                 </button>
-                <label for="nationality-select">País:</label>                <select class="nationality-selector" id="nationality-select">
+                <label for="nationality-select">País:</label>
+                <select class="nationality-selector" id="nationality-select">
                     <option value="">Todos los países</option>
-                </select>                                                        
+                </select>
                 <button title="Reiniciar selección" id="reset-nationality" class="reset-button">
-                    ×                                          
+                    ×
                 </button>
-                <label for="value-select">Valor:</label>                <select class="value-selector" id="value-select">
+                <label for="value-select">Valor:</label>
+                <select class="value-selector" id="value-select">
                     <option value="">Todos los valores</option>
                     <option value="0-10">0-10M</option>
                     <option value="11-20">11-20M</option>
                     <option value="21-30">21-30M</option>
                     <option value=">30">Más de 30M</option>
-                </select>                                                        
+                </select>
                 <button title="Reiniciar selección" id="reset-value" class="reset-button">
-                    ×                                          
+                    ×
                 </button>
-                                                          
+
             </div>
-                                                           
+
             <div class="advanced-search-layout">
-                                                                      
+
                 <div class="advanced-search-left">
-                                                                                  
+
                     <div class="position-filter">
-                        <label>Posición:</label>                                                                                
+                        <label>Posición:</label>
                         <div class="position-options">
-                                                                                                                                          
+
                             <div class="position-option">
-                                <input checked="" id="position-all" type="checkbox" />                                <label for="position-all">Todos</label>                                                                                            
+                                <input checked="" id="position-all" type="checkbox" />
+                                <label for="position-all">Todos</label>
                             </div>
-                                                                                                           
+
                             <div class="position-option">
-                                <input id="position-gk" type="checkbox" />                                <label for="position-gk">GK</label>                                                                                            
+                                <input id="position-gk" type="checkbox" />
+                                <label for="position-gk">GK</label>
                             </div>
-                                                                                                           
+
                             <div class="position-option">
-                                <input id="position-df" type="checkbox" />                                <label for="position-df">DF</label>                                                                                            
+                                <input id="position-df" type="checkbox" />
+                                <label for="position-df">DF</label>
                             </div>
-                                                                                                           
+
                             <div class="position-option">
-                                <input id="position-mf" type="checkbox" />                                <label for="position-mf">MF</label>                                                                                            
+                                <input id="position-mf" type="checkbox" />
+                                <label for="position-mf">MF</label>
                             </div>
-                                                                                                           
+
                             <div class="position-option">
-                                <input id="position-fw" type="checkbox" />                                <label for="position-fw">FW</label>                                                                                            
+                                <input id="position-fw" type="checkbox" />
+                                <label for="position-fw">FW</label>
                             </div>
-                                                                                              
+
                         </div>
-                                                                                  
+
                     </div>
-                                                                                   
+
                     <div class="age-filter">
-                        <label>Edad:</label>                                                                                
+                        <label>Edad:</label>
                         <div class="slider-container">
-                                                                                                          
-                            <div class="slider-track">
-                                                                             
-                            </div>
-                                                                                                           
-                            <div id="slider-range" class="slider-range">
-                                                                             
-                            </div>
-                                                                                                           
-                            <div data-value="16" id="thumb-min" class="slider-thumb">
-                                                                             
-                            </div>
-                                                                                                           
-                            <div data-value="40" id="thumb-max" class="slider-thumb">
-                                                                             
-                            </div>
-                                                                                              
+                            <div class="slider-track"></div>
+                            <div id="slider-range" class="slider-range"></div>
+                            <div data-value="16" id="thumb-min" class="slider-thumb"></div>
+                            <div data-value="40" id="thumb-max" class="slider-thumb"></div>
                         </div>
-                                                                                              
                         <div class="age-values">
-                            <span id="min-age">16 años</span>                            <span id="max-age">40 años</span>                                                                                
+                            <span id="min-age">16 años</span>
+                            <span id="max-age">40 años</span>
                         </div>
-                                                                                  
+                        <div class="slider-ticks" id="age-ticks">
+                            <div class="tick-mark"><span class="tick-label">16</span></div>
+                            <div class="tick-mark"><span class="tick-label">20</span></div>
+                            <div class="tick-mark"><span class="tick-label">25</span></div>
+                            <div class="tick-mark"><span class="tick-label">30</span></div>
+                            <div class="tick-mark"><span class="tick-label">35</span></div>
+                            <div class="tick-mark"><span class="tick-label">40</span></div>
+                        </div>
                     </div>
-                                                                      
+
                 </div>
-                                                                       
+
                 <div class="advanced-search-right">
-                                                                                  
+
                     <div class="attribute-filters">
-                                                                                              
+
                         <div class="attribute-section-title">
-                            Franja de media                                                          
+                            Franja de media
                         </div>
-                                                                                              
+
                         <div class="attribute-filters-grid">
-                                                                                                          
+
                             <div class="attribute-filter">
-                                <label>GK</label>                                                                                                        
+                                <label>GK</label>
                                 <div class="attribute-slider-container">
-                                                                                                                                  
-                                    <div class="attribute-slider-track">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div id="gk-range" class="attribute-slider-range">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div data-value="1" id="gk-thumb-min" class="attribute-slider-thumb">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div data-value="28" id="gk-thumb-max" class="attribute-slider-thumb">
-                                                                                                 
-                                    </div>
-                                                                                                                      
+                                    <div class="attribute-slider-track"></div>
+                                    <div id="gk-range" class="attribute-slider-range"></div>
+                                    <div data-value="1" id="gk-thumb-min" class="attribute-slider-thumb"></div>
+                                    <div data-value="28" id="gk-thumb-max" class="attribute-slider-thumb"></div>
                                 </div>
-                                                                                                                      
                                 <div class="attribute-values">
-                                    <span id="gk-min-value">1</span>                                    <span id="gk-max-value">28</span>                                                                                                        
+                                    <span id="gk-min-value">1</span>
+                                    <span id="gk-max-value">28</span>
                                 </div>
-                                                                                                          
+                                <div class="attr-ticks" id="gk-ticks">
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">1</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">5</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">10</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">15</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">20</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">25</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">28</span></div>
+                                </div>
                             </div>
-                                                                                                           
+
                             <div class="attribute-filter">
-                                <label>DF</label>                                                                                                        
+                                <label>DF</label>
                                 <div class="attribute-slider-container">
-                                                                                                                                  
-                                    <div class="attribute-slider-track">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div id="df-range" class="attribute-slider-range">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div data-value="1" id="df-thumb-min" class="attribute-slider-thumb">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div data-value="28" id="df-thumb-max" class="attribute-slider-thumb">
-                                                                                                 
-                                    </div>
-                                                                                                                      
+                                    <div class="attribute-slider-track"></div>
+                                    <div id="df-range" class="attribute-slider-range"></div>
+                                    <div data-value="1" id="df-thumb-min" class="attribute-slider-thumb"></div>
+                                    <div data-value="28" id="df-thumb-max" class="attribute-slider-thumb"></div>
                                 </div>
-                                                                                                                      
                                 <div class="attribute-values">
-                                    <span id="df-min-value">1</span>                                    <span id="df-max-value">28</span>                                                                                                        
+                                    <span id="df-min-value">1</span>
+                                    <span id="df-max-value">28</span>
                                 </div>
-                                                                                                          
+                                <div class="attr-ticks" id="df-ticks">
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">1</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">5</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">10</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">15</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">20</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">25</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">28</span></div>
+                                </div>
                             </div>
-                                                                                                           
+
                             <div class="attribute-filter">
-                                <label>MF</label>                                                                                                        
+                                <label>MF</label>
                                 <div class="attribute-slider-container">
-                                                                                                                                  
-                                    <div class="attribute-slider-track">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div id="mf-range" class="attribute-slider-range">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div data-value="1" id="mf-thumb-min" class="attribute-slider-thumb">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div data-value="28" id="mf-thumb-max" class="attribute-slider-thumb">
-                                                                                                 
-                                    </div>
-                                                                                                                      
+                                    <div class="attribute-slider-track"></div>
+                                    <div id="mf-range" class="attribute-slider-range"></div>
+                                    <div data-value="1" id="mf-thumb-min" class="attribute-slider-thumb"></div>
+                                    <div data-value="28" id="mf-thumb-max" class="attribute-slider-thumb"></div>
                                 </div>
-                                                                                                                      
                                 <div class="attribute-values">
-                                    <span id="mf-min-value">1</span>                                    <span id="mf-max-value">28</span>                                                                                                        
+                                    <span id="mf-min-value">1</span>
+                                    <span id="mf-max-value">28</span>
                                 </div>
-                                                                                                          
+                                <div class="attr-ticks" id="mf-ticks">
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">1</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">5</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">10</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">15</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">20</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">25</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">28</span></div>
+                                </div>
                             </div>
-                                                                                                           
+
                             <div class="attribute-filter">
-                                <label>FW</label>                                                                                                        
+                                <label>FW</label>
                                 <div class="attribute-slider-container">
-                                                                                                                                  
-                                    <div class="attribute-slider-track">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div id="fw-range" class="attribute-slider-range">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div data-value="1" id="fw-thumb-min" class="attribute-slider-thumb">
-                                                                                                 
-                                    </div>
-                                                                                                                                   
-                                    <div data-value="28" id="fw-thumb-max" class="attribute-slider-thumb">
-                                                                                                 
-                                    </div>
-                                                                                                                      
+                                    <div class="attribute-slider-track"></div>
+                                    <div id="fw-range" class="attribute-slider-range"></div>
+                                    <div data-value="1" id="fw-thumb-min" class="attribute-slider-thumb"></div>
+                                    <div data-value="28" id="fw-thumb-max" class="attribute-slider-thumb"></div>
                                 </div>
-                                                                                                                      
                                 <div class="attribute-values">
-                                    <span id="fw-min-value">1</span>                                    <span id="fw-max-value">28</span>                                                                                                        
+                                    <span id="fw-min-value">1</span>
+                                    <span id="fw-max-value">28</span>
                                 </div>
-                                                                                                          
+                                <div class="attr-ticks" id="fw-ticks">
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">1</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">5</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">10</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">15</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">20</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">25</span></div>
+                                    <div class="attr-tick-mark"><span class="attr-tick-label">28</span></div>
+                                </div>
                             </div>
-                                                                                              
+
                         </div>
-                                                                                               
+
                         <div style="margin-top: 15px;" class="attribute-section-title">
-                            Experiencia mínima                                                          
+                            Experiencia mínima
                         </div>
-                                                                                              
+
                         <div class="attribute-filters-grid">
-                                                                                                          
+
                             <div class="attribute-filter">
-                                <input max="999" min="1" placeholder="GK (KAb)" id="gk-experience" class="experience-input" type="number" />                                                                                            
+                                <input max="999" min="1" placeholder="GK (KAb)" id="gk-experience" class="experience-input" type="number" />
                             </div>
-                                                                                                           
+
                             <div class="attribute-filter">
-                                <input max="999" min="1" placeholder="DF (TAb)" id="df-experience" class="experience-input" type="number" />                                                                                            
+                                <input max="999" min="1" placeholder="DF (TAb)" id="df-experience" class="experience-input" type="number" />
                             </div>
-                                                                                                           
+
                             <div class="attribute-filter">
-                                <input max="999" min="1" placeholder="MF (PAb)" id="mf-experience" class="experience-input" type="number" />                                                                                            
+                                <input max="999" min="1" placeholder="MF (PAb)" id="mf-experience" class="experience-input" type="number" />
                             </div>
-                                                                                                           
+
                             <div class="attribute-filter">
-                                <input max="999" min="1" placeholder="FW (SAb)" id="fw-experience" class="experience-input" type="number" />                                                                                            
+                                <input max="999" min="1" placeholder="FW (SAb)" id="fw-experience" class="experience-input" type="number" />
                             </div>
-                                                                                              
+
                         </div>
-                                                                                  
+
                     </div>
-                                                                      
+
                 </div>
-                                                          
+
             </div>
-                                                           
+
             <div class="filter-footer">
-                                                                      
+
                 <button id="reset-all" class="reset-all-button">
-                    Reiniciar todos los filtros                                          
+                    Reiniciar todos los filtros
                 </button>
-                                                                      
+
                 <div id="player-counter" class="player-counter">
-                    0 jugadores                                          
+                    0 jugadores
                 </div>
-                                                          
+
             </div>
-                                              
+
         </div>
-                                  
+
     </div>
-          
+
     <div id="loading">
-        Cargando base de datos... puede tardar más de 30 segundos                  
+        Cargando base de datos... puede tardar más de 30 segundos
     </div>
-          
+
     <div id="results">
-                                 
     </div>
-                       
+
     <button id="back-to-top" class="back-to-top">
-        ↑                  
+        ↑
     </button>
-          
+
     <div class="modal" id="myModal">
-                                              
+
         <div class="modal-content">
-            <span class="close">×</span>                                            
+            <span class="close">×</span>
             <div id="modalBody">
-                                             
             </div>
-                                              
+
         </div>
-                                  
+
     </div>
     <script>
-        // Definición de campos con sus significados
         const headerFields = [
             'Name', 'Age', 'Nat', 'St', 'Tk', 'Ps', 'Sh', 'Ag', 'KAb', 'TAb', 'PAb', 'SAb',
             'Gam', 'Sub', 'Min', 'Mom', 'Sav', 'Con', 'Ktk', 'Kps', 'Sht', 'Gls', 'Ass', 'DP', 'Inj', 'Sus', 'Fit'
@@ -1481,17 +1560,13 @@
         let teams = [];
         let nationalities = [];
 
-        // Variable para la temporada actual (por defecto 37-start)
-        let currentSeason = '37-start';
-        // Caché para los datos de cada temporada
+        let currentSeason = '37-mid';
         const seasonData = {};
 
-        // Función para detectar si es un dispositivo móvil
         function isMobileDevice() {
             return (window.innerWidth <= 768) || ('ontouchstart' in window);
         }
 
-        // Mostrar la nota solo en móviles
         function updateMobileNote() {
             const note = document.getElementById('search-note');
             if (note) {
@@ -1503,10 +1578,8 @@
             }
         }
 
-        // Escuchar cambios de tamaño para actualizar la nota
         window.addEventListener('resize', updateMobileNote);
 
-        // Función para calcular el valor de un jugador (algoritmo proporcionado)
         function calculatePlayerValue(player) {
             const st = parseInt(player.St) || 0;
             const tk = parseInt(player.Tk) || 0;
@@ -1521,7 +1594,6 @@
             const attrs = [st, tk, ps, sh];
             let maxAttr = Math.max(...attrs);
             const positionIndex = attrs.indexOf(maxAttr);
-            const positions = ['GK', 'DF', 'MF', 'FW'];
             const primaryExp = [kab, tab, pab, sab][positionIndex];
             const secondaryAttrs = attrs.filter((_, index) => index !== positionIndex);
             const secondaryExps = [kab, tab, pab, sab].filter((_, index) => index !== positionIndex);
@@ -1645,8 +1717,9 @@
         }
 
         function calculateSalary(player) {
-            const salaryTable = {15:0.5,16:1,17:2,18:3,19:4,20:5,21:6,22:7,23:8,24:9};
-            const attrs = [parseInt(player.St) || 0, parseInt(player.Tk) || 0, parseInt(player.Ps) || 0, parseInt(player.Sh) || 0];
+            const salaryTable = { 15: 0.5, 16: 1, 17: 2, 18: 3, 19: 4, 20: 5, 21: 6, 22: 7, 23: 8, 24: 9 };
+            const attrs = [parseInt(player.St) || 0, parseInt(player.Tk) || 0, parseInt(player.Ps) || 0, parseInt(
+            player.Sh) || 0];
             let maxAttr = Math.max(...attrs);
             if (maxAttr >= 25) maxAttr = 24;
             return salaryTable[maxAttr] || 0;
@@ -2042,7 +2115,8 @@
         }
 
         function showPlayerStats(player) {
-            const attrs = [parseInt(player.St) || 0, parseInt(player.Tk) || 0, parseInt(player.Ps) || 0, parseInt(player.Sh) || 0];
+            const attrs = [parseInt(player.St) || 0, parseInt(player.Tk) || 0, parseInt(player.Ps) || 0, parseInt(player
+            .Sh) || 0];
             const maxAttr = Math.max(...attrs);
             let stars = '';
             if (maxAttr >= 21) {
@@ -2122,7 +2196,6 @@
         }
 
         function showTeamSquad(team, season = currentSeason) {
-            // Obtener los jugadores de la temporada seleccionada
             let teamPlayers = [];
             if (seasonData[season]) {
                 teamPlayers = seasonData[season].filter(p => p.team === team);
@@ -2148,11 +2221,13 @@
                 let status = '';
                 if (inj > 0) {
                     const partidoText = inj === 1 ? 'partido' : 'partidos';
-                    status += `<span class="status-tag" title="Lesionado por ${inj} ${partidoText}">LES</span>`;
+                    status +=
+                        `<span class="status-tag" title="Lesionado por ${inj} ${partidoText}">LES</span>`;
                 }
                 if (sus > 0) {
                     const partidoText = sus === 1 ? 'partido' : 'partidos';
-                    status += `<span class="status-tag" title="Sancionado por ${sus} ${partidoText}">SAN</span>`;
+                    status +=
+                        `<span class="status-tag" title="Sancionado por ${sus} ${partidoText}">SAN</span>`;
                 }
                 const attributes = {
                     'St': parseInt(p.St) || 0,
@@ -2161,8 +2236,10 @@
                     'Sh': parseInt(p.Sh) || 0
                 };
                 const maxValue = Math.max(...Object.values(attributes));
-                const highestAttributes = Object.keys(attributes).filter(attr => attributes[attr] === maxValue);
-                const attrHtml = `<span class="${highestAttributes.includes('St') ? 'highlight' : ''}">${p.St}</span> <span class="${highestAttributes.includes('Tk') ? 'highlight' : ''}">${p.Tk}</span> <span class="${highestAttributes.includes('Ps') ? 'highlight' : ''}">${p.Ps}</span> <span class="${highestAttributes.includes('Sh') ? 'highlight' : ''}">${p.Sh}</span>`;
+                const highestAttributes = Object.keys(attributes).filter(attr => attributes[attr] ===
+                    maxValue);
+                const attrHtml =
+                    `<span class="${highestAttributes.includes('St') ? 'highlight' : ''}">${p.St}</span> <span class="${highestAttributes.includes('Tk') ? 'highlight' : ''}">${p.Tk}</span> <span class="${highestAttributes.includes('Ps') ? 'highlight' : ''}">${p.Ps}</span> <span class="${highestAttributes.includes('Sh') ? 'highlight' : ''}">${p.Sh}</span>`;
                 squadList += `
                     <tr>
                         <td>
@@ -2180,10 +2257,10 @@
 
             const seasonOptions = `
                 <select class="modal-season-select" id="modal-season-select">
-                    <option value="37-start" ${season === '37-start' ? 'selected' : ''}>Temporada 37 (Inicio)</option>
-                    <option value="current" ${season === 'current' ? 'selected' : ''}>Temporada actual</option>
-                    <option value="36" ${season === '36' ? 'selected' : ''}>Temporada 36 (Final)</option>
-                    <option value="36-start" ${season === '36-start' ? 'selected' : ''}>Temporada 36 (Inicio)</option>
+                    <option value="37-mid" ${season === '37-mid' ? 'selected' : ''}>Temporada 37 - Intermedio</option>
+                    <option value="37-start" ${season === '37-start' ? 'selected' : ''}>Temporada 37 - Inicio</option>
+                    <option value="36" ${season === '36' ? 'selected' : ''}>Temporada 36 - Final</option>
+                    <option value="36-start" ${season === '36-start' ? 'selected' : ''}>Temporada 36 - Inicio</option>
                 </select>
             `;
 
@@ -2211,7 +2288,6 @@
                 </table>
             `;
 
-            // Hacer async el evento para esperar a que loadData termine
             document.getElementById('modal-season-select').addEventListener('change', async function(e) {
                 const newSeason = e.target.value;
                 if (!seasonData[newSeason]) {
@@ -2223,7 +2299,6 @@
             document.getElementById('myModal').style.display = 'flex';
         }
 
-        // Función para cargar la temporada actual (múltiples Dropbox)
         async function loadCurrentSeason() {
             const plantillasDropbox = {
                 'Ajax': 'https://www.dropbox.com/scl/fi/9njb84ywzym3hhx5i2lg5/ajx.txt?rlkey=jhym2pqc9m60sioha0mmcil0o&e=1&dl=1',
@@ -2260,10 +2335,13 @@
                     const response = await fetch(proxyUrl + encodeURIComponent(url));
                     if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
                     const text = await response.text();
-                    const lineas = text.split('\n').filter(linea => linea.trim() && !linea.startsWith('*'));
+                    const lineas = text.split('\n').filter(linea => linea.trim() && !linea.startsWith(
+                        '*'));
                     lineas.forEach(linea => {
-                        // Ignorar líneas que sean exactamente la cabecera no deseada
-                        if (linea.includes('Name') && linea.includes('Age') && linea.includes('St') && linea.includes('Tk') && linea.includes('Ps') && linea.includes('Sh') && linea.includes('KAb') && linea.includes('TAb') && linea.includes('PAb') && linea.includes('SAb')) {
+                        if (linea.includes('Name') && linea.includes('Age') && linea.includes(
+                                'St') && linea.includes('Tk') && linea.includes('Ps') && linea
+                            .includes('Sh') && linea.includes('KAb') && linea.includes('TAb') &&
+                            linea.includes('PAb') && linea.includes('SAb')) {
                             return;
                         }
                         const partes = linea.trim().split(/\s+/);
@@ -2289,18 +2367,17 @@
             return newPlayers;
         }
 
-        // Función para cargar la temporada 36 (final) desde el enlace
         async function loadSeason36() {
             const url = 'https://www.tusoccermanager.com/h124-playerdbseason36-2-html';
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
             const html = await response.text();
-            
+
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             const preElement = doc.querySelector('pre');
             if (!preElement) throw new Error('No se encontró la etiqueta <pre> en la página');
-            
+
             const text = preElement.textContent;
             const lines = text.split('\n');
 
@@ -2327,7 +2404,9 @@
             }
 
             if (headerIndices.length !== teamNames.length) {
-                console.warn(`Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`);
+                console.warn(
+                    `Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`
+                    );
             }
 
             const newPlayers = [];
@@ -2341,8 +2420,9 @@
                 for (let i = startIdx; i < endIdx; i++) {
                     const line = lines[i].trim();
                     if (!line) continue;
-                    // Ignorar líneas que sean exactamente la cabecera no deseada
-                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes('Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line.includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
+                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes(
+                            'Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line
+                        .includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
                         continue;
                     }
                     const partes = line.split(/\s+/);
@@ -2363,18 +2443,17 @@
             return newPlayers;
         }
 
-        // Función para cargar la temporada 36 (inicio) desde el enlace
         async function loadSeason36Start() {
             const url = 'https://www.tusoccermanager.com/h129-playerdbseason36-1-html';
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
             const html = await response.text();
-            
+
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             const preElement = doc.querySelector('pre');
             if (!preElement) throw new Error('No se encontró la etiqueta <pre> en la página');
-            
+
             const text = preElement.textContent;
             const lines = text.split('\n');
 
@@ -2401,7 +2480,9 @@
             }
 
             if (headerIndices.length !== teamNames.length) {
-                console.warn(`Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`);
+                console.warn(
+                    `Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`
+                    );
             }
 
             const newPlayers = [];
@@ -2415,8 +2496,9 @@
                 for (let i = startIdx; i < endIdx; i++) {
                     const line = lines[i].trim();
                     if (!line) continue;
-                    // Ignorar líneas que sean exactamente la cabecera no deseada
-                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes('Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line.includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
+                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes(
+                            'Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line
+                        .includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
                         continue;
                     }
                     const partes = line.split(/\s+/);
@@ -2437,18 +2519,17 @@
             return newPlayers;
         }
 
-        // Función para cargar la temporada 37 (inicio) desde el enlace
         async function loadSeason37Start() {
             const url = 'https://www.tusoccermanager.com/h131-playerdbseason37-1-html';
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
             const html = await response.text();
-            
+
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             const preElement = doc.querySelector('pre');
             if (!preElement) throw new Error('No se encontró la etiqueta <pre> en la página');
-            
+
             const text = preElement.textContent;
             const lines = text.split('\n');
 
@@ -2475,7 +2556,9 @@
             }
 
             if (headerIndices.length !== teamNames.length) {
-                console.warn(`Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`);
+                console.warn(
+                    `Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`
+                    );
             }
 
             const newPlayers = [];
@@ -2489,8 +2572,9 @@
                 for (let i = startIdx; i < endIdx; i++) {
                     const line = lines[i].trim();
                     if (!line) continue;
-                    // Ignorar líneas que sean exactamente la cabecera no deseada
-                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes('Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line.includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
+                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes(
+                            'Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line
+                        .includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
                         continue;
                     }
                     const partes = line.split(/\s+/);
@@ -2511,21 +2595,93 @@
             return newPlayers;
         }
 
-        // Función principal de carga de datos (ahora con caché)
+        async function loadSeason37Mid() {
+            const url = 'https://www.tusoccermanager.com/h150-playerdbseason37-1-5-html';
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+            const html = await response.text();
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const preElement = doc.querySelector('pre');
+            if (!preElement) throw new Error('No se encontró la etiqueta <pre> en la página');
+
+            const text = preElement.textContent;
+            const lines = text.split('\n');
+
+            let firstHeaderIndex = -1;
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].trim().startsWith('Name')) {
+                    firstHeaderIndex = i;
+                    break;
+                }
+            }
+            if (firstHeaderIndex === -1) throw new Error('No se encontró la cabecera de jugadores');
+
+            const teamNames = [];
+            for (let i = 0; i < firstHeaderIndex; i++) {
+                const line = lines[i].trim();
+                if (line) teamNames.push(line);
+            }
+
+            const headerIndices = [];
+            for (let i = firstHeaderIndex; i < lines.length; i++) {
+                if (lines[i].trim().startsWith('Name')) {
+                    headerIndices.push(i);
+                }
+            }
+
+            if (headerIndices.length !== teamNames.length) {
+                console.warn(
+                    `Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`
+                    );
+            }
+
+            const newPlayers = [];
+            const numBlocks = Math.min(headerIndices.length, teamNames.length);
+
+            for (let b = 0; b < numBlocks; b++) {
+                const startIdx = headerIndices[b] + 2;
+                const endIdx = (b < numBlocks - 1) ? headerIndices[b + 1] : lines.length;
+                const team = teamNames[b];
+
+                for (let i = startIdx; i < endIdx; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes(
+                            'Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line
+                        .includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
+                        continue;
+                    }
+                    const partes = line.split(/\s+/);
+                    if (partes.length === 27) {
+                        const playerData = {};
+                        headerFields.forEach((field, idx) => {
+                            playerData[field] = partes[idx];
+                        });
+                        playerData.team = team;
+                        playerData.value = calculatePlayerValue(playerData);
+                        playerData.salary = calculateSalary(playerData);
+                        playerData.positions = getPlayerPosition(playerData);
+                        newPlayers.push(playerData);
+                    }
+                }
+            }
+
+            return newPlayers;
+        }
+
         async function loadData(season = currentSeason, silent = false) {
             if (!silent) {
                 document.getElementById('loading').style.display = 'block';
                 document.getElementById('results').style.display = 'none';
             }
 
-            // Si ya tenemos los datos en caché, los usamos
             if (seasonData[season]) {
                 players = seasonData[season];
                 if (!silent) {
-                    // Actualizar equipos y nacionalidades
                     teams = [...new Set(players.map(p => p.team))].sort();
-                    
-                    // Llenar el selector de equipos
+
                     const teamSelect = document.getElementById('team-select');
                     teamSelect.innerHTML = '<option value="">Todos los equipos</option>';
                     teams.forEach(team => {
@@ -2535,7 +2691,6 @@
                         teamSelect.appendChild(option);
                     });
 
-                    // Calcular anchura para team-select
                     const tempSpan = document.createElement('span');
                     tempSpan.style.visibility = 'hidden';
                     tempSpan.style.position = 'absolute';
@@ -2552,7 +2707,6 @@
                     document.body.removeChild(tempSpan);
                     teamSelect.style.width = `${maxWidth + 30}px`;
 
-                    // Actualizar nacionalidades
                     nationalities = [...new Set(players.map(player => player.Nat.toUpperCase()))].sort();
                     const nameToCodes = {};
                     nationalities.forEach(nationality => {
@@ -2583,17 +2737,18 @@
 
             try {
                 let newPlayers = [];
-                if (season === 'current') {
-                    newPlayers = await loadCurrentSeason();
+                if (season === '37-mid') {
+                    newPlayers = await loadSeason37Mid();
+                } else if (season === '37-start') {
+                    newPlayers = await loadSeason37Start();
                 } else if (season === '36') {
                     newPlayers = await loadSeason36();
                 } else if (season === '36-start') {
                     newPlayers = await loadSeason36Start();
-                } else if (season === '37-start') {
-                    newPlayers = await loadSeason37Start();
+                } else if (season === 'current') {
+                    newPlayers = await loadCurrentSeason();
                 }
 
-                // Fetch face DB (siempre igual)
                 const faceResponse = await fetch('https://www.tusoccermanager.com/h88-facedb-html');
                 const faceText = await faceResponse.text();
                 const faceDoc = new DOMParser().parseFromString(faceText, 'text/html');
@@ -2612,14 +2767,11 @@
                     player.face = faces[player.Name] || unknownFace;
                 });
 
-                // Guardar en caché
                 seasonData[season] = newPlayers;
                 players = newPlayers;
 
-                // Obtener lista única de equipos
                 teams = [...new Set(players.map(player => player.team))].sort();
 
-                // Llenar el selector de equipos
                 const teamSelect = document.getElementById('team-select');
                 teamSelect.innerHTML = '<option value="">Todos los equipos</option>';
                 teams.forEach(team => {
@@ -2629,7 +2781,6 @@
                     teamSelect.appendChild(option);
                 });
 
-                // Calcular anchura para team-select
                 const tempSpan = document.createElement('span');
                 tempSpan.style.visibility = 'hidden';
                 tempSpan.style.position = 'absolute';
@@ -2646,7 +2797,6 @@
                 document.body.removeChild(tempSpan);
                 teamSelect.style.width = `${maxWidth + 30}px`;
 
-                // Fetch flags (si no están cargadas)
                 if (Object.keys(flags).length === 0) {
                     const flagResponse = await fetch('https://www.tusoccermanager.com/h86-flagdb-html');
                     const flagText = await flagResponse.text();
@@ -2674,7 +2824,6 @@
                     }
                 }
 
-                // Fetch full names database
                 if (Object.keys(fullNames).length === 0) {
                     const fullNamesResponse = await fetch('https://www.tusoccermanager.com/h87-fullnamedb-html');
                     const fullNamesText = await fullNamesResponse.text();
@@ -2692,7 +2841,6 @@
                     }
                 }
 
-                // Obtener lista única de nacionalidades
                 nationalities = [...new Set(players.map(player => player.Nat.toUpperCase()))].sort();
 
                 const nameToCodes = {};
@@ -2715,7 +2863,6 @@
                     nationalitySelect.appendChild(option);
                 });
 
-                // Fetch badges (si no están cargadas)
                 if (Object.keys(badges).length === 0) {
                     const badgeResponse = await fetch('https://www.tusoccermanager.com/h63-teambadgesdatabase-html');
                     const badgeText = await badgeResponse.text();
@@ -2728,7 +2875,6 @@
                     }
                 }
 
-                // Fetch stadia (si no están cargadas)
                 if (Object.keys(stadia).length === 0) {
                     const stadiumResponse = await fetch('https://www.tusoccermanager.com/h90-stadia-html');
                     const stadiumText = await stadiumResponse.text();
@@ -2744,24 +2890,20 @@
                     });
                 }
 
-                // Configurar los checkboxes de posición (solo una vez)
                 if (!window.positionSetupDone) {
                     setupPositionCheckboxes();
                     window.positionSetupDone = true;
                 }
 
-                // Configurar el slider de edad
                 setupAgeSlider();
-
-                // Configurar los sliders de atributos
                 setupAttributeSliders();
 
-                // Resetear filtros y mostrar todos
                 resetAllFilters();
             } catch (error) {
                 console.error('Error loading data:', error);
                 if (!silent) {
-                    document.getElementById('results').innerHTML = '<p>Error al cargar los datos. Intenta recargar la página.</p>';
+                    document.getElementById('results').innerHTML =
+                        '<p>Error al cargar los datos. Intenta recargar la página.</p>';
                 }
             } finally {
                 if (!silent) {
@@ -2775,10 +2917,12 @@
             const results = document.getElementById('results');
             results.innerHTML = '';
 
-            document.getElementById('player-counter').textContent = `${filteredPlayers.length} jugador${filteredPlayers.length !== 1 ? 'es' : ''}`;
+            document.getElementById('player-counter').textContent =
+                `${filteredPlayers.length} jugador${filteredPlayers.length !== 1 ? 'es' : ''}`;
 
             if (filteredPlayers.length === 0) {
-                results.innerHTML = '<p class="no-results">No se encontraron jugadores que coincidan con los filtros.</p>';
+                results.innerHTML =
+                    '<p class="no-results">No se encontraron jugadores que coincidan con los filtros.</p>';
                 return;
             }
 
@@ -2804,21 +2948,31 @@
 
                 const nationalityName = fullNames[flagCode] || player.Nat;
 
-                const kabArrow = parseInt(player.KAb) >= 900 ? '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' : '';
-                const tabArrow = parseInt(player.TAb) >= 900 ? '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' : '';
-                const pabArrow = parseInt(player.PAb) >= 900 ? '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' : '';
-                const sabArrow = parseInt(player.SAb) >= 900 ? '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' : '';
+                const kabArrow = parseInt(player.KAb) >= 900 ?
+                    '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' :
+                    '';
+                const tabArrow = parseInt(player.TAb) >= 900 ?
+                    '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' :
+                    '';
+                const pabArrow = parseInt(player.PAb) >= 900 ?
+                    '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' :
+                    '';
+                const sabArrow = parseInt(player.SAb) >= 900 ?
+                    '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' :
+                    '';
 
                 const inj = parseInt(player.Inj) || 0;
                 const sus = parseInt(player.Sus) || 0;
                 let status = '';
                 if (inj > 0) {
                     const partidoText = inj === 1 ? 'partido' : 'partidos';
-                    status += `<span class="status-tag" title="Lesionado por ${inj} ${partidoText}">LES</span>`;
+                    status +=
+                        `<span class="status-tag" title="Lesionado por ${inj} ${partidoText}">LES</span>`;
                 }
                 if (sus > 0) {
                     const partidoText = sus === 1 ? 'partido' : 'partidos';
-                    status += `<span class="status-tag" title="Sancionado por ${sus} ${partidoText}">SAN</span>`;
+                    status +=
+                        `<span class="status-tag" title="Sancionado por ${sus} ${partidoText}">SAN</span>`;
                 }
 
                 card.innerHTML = `
@@ -2964,7 +3118,8 @@
             }
 
             if (nationalityQuery) {
-                const selectedOption = document.querySelector(`#nationality-select option[value="${nationalityQuery}"]`);
+                const selectedOption = document.querySelector(
+                    `#nationality-select option[value="${nationalityQuery}"]`);
                 const codes = selectedOption ? selectedOption.getAttribute('data-codes').split(',') : [];
                 if (codes.length > 0) {
                     filtered = filtered.filter(player =>
@@ -3044,7 +3199,6 @@
             render(filtered);
         }
 
-        // Event listeners
         document.getElementById('search').addEventListener('input', filterPlayers);
 
         document.getElementById('team-select').addEventListener('change', function() {
@@ -3130,9 +3284,11 @@
             document.body.classList.toggle('dark');
             const svg = this.querySelector('svg');
             if (document.body.classList.contains('dark')) {
-                svg.innerHTML = '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/>';
+                svg.innerHTML =
+                    '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/>';
             } else {
-                svg.innerHTML = '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>';
+                svg.innerHTML =
+                    '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>';
             }
         });
 
@@ -3172,7 +3328,6 @@
             });
         }
 
-        // Inicializar la nota para móviles y cargar datos
         updateMobileNote();
         loadData(currentSeason);
     </script>
