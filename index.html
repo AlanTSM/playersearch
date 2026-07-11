@@ -6,6 +6,10 @@
     <title>Buscador de jugadores - Tu Soccer Manager</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" />
     <style>
+        :root {
+            --sidebar-width: 40px;
+            --sidebar-expanded: 230px;
+        }
         body {
             font-family: 'Montserrat', Arial, sans-serif;
             margin: 0;
@@ -13,6 +17,7 @@
             background-color: #f4f4f4;
             color: #333;
             transition: background-color 0.3s, color 0.3s;
+            padding-left: calc(var(--sidebar-width) + 20px);
         }
         body.dark {
             background-color: #1a1a1a;
@@ -44,6 +49,7 @@
             margin: 0 auto 20px;
             display: flex;
             align-items: center;
+            gap: 10px;
         }
         #search {
             width: 100%;
@@ -75,6 +81,15 @@
         body.dark .search-clear {
             color: #aaa;
         }
+        .update-date {
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+        body.dark .update-date {
+            color: #aaa;
+        }
         .search-note {
             max-width: 600px;
             margin: -10px auto 20px;
@@ -96,6 +111,7 @@
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
         }
         #results.small-cards {
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -125,6 +141,40 @@
         }
         #results.small-cards .attr .experience {
             font-size: 8px;
+        }
+        .results-loader {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.7);
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+        body.dark .results-loader {
+            background: rgba(0,0,0,0.6);
+        }
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #1a365d;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            transition: border-color 0.3s;
+        }
+        body.dark .loader-spinner {
+            border-color: #a8c3e6;
+            border-top-color: transparent;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         .card {
             background: white;
@@ -328,66 +378,54 @@
         .team-selector,
         .nationality-selector,
         .value-selector,
-        .season-selector {
+        .season-selector,
+        .filter-number-input {
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 14px;
             transition: border-color 0.3s, background-color 0.3s, color 0.3s;
         }
         body.dark .team-selector,
         body.dark .nationality-selector,
         body.dark .value-selector,
-        body.dark .season-selector {
+        body.dark .season-selector,
+        body.dark .filter-number-input {
             border-color: #555;
             background-color: #333;
             color: #ddd;
         }
-        .team-selector,
-        .nationality-selector,
-        .value-selector,
-        .season-selector {
-            scrollbar-width: thin;
-            scrollbar-color: #1a365d #f0f0f0;
+        .filter-number-input {
+            width: 55px;
+            text-align: center;
         }
-        body.dark .team-selector,
-        body.dark .nationality-selector,
-        body.dark .value-selector,
-        body.dark .season-selector {
-            scrollbar-color: #2c5282 #444;
+        .filter-number-input::placeholder {
+            opacity: 0.5;
+            color: #666;
+            font-size: 10px;
         }
-        .team-selector::-webkit-scrollbar,
-        .nationality-selector::-webkit-scrollbar,
-        .value-selector::-webkit-scrollbar,
-        .season-selector::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        body.dark .filter-number-input::placeholder {
+            color: #aaa;
         }
-        .team-selector::-webkit-scrollbar-track,
-        .nationality-selector::-webkit-scrollbar-track,
-        .value-selector::-webkit-scrollbar-track,
-        .season-selector::-webkit-scrollbar-track {
-            background: #f0f0f0;
-            border-radius: 4px;
+        select option {
+            background: white;
+            color: black;
         }
-        body.dark .team-selector::-webkit-scrollbar-track,
-        body.dark .nationality-selector::-webkit-scrollbar-track,
-        body.dark .value-selector::-webkit-scrollbar-track,
-        body.dark .season-selector::-webkit-scrollbar-track {
-            background: #444;
+        body.dark select option {
+            background: #333;
+            color: white;
         }
-        .team-selector::-webkit-scrollbar-thumb,
-        .nationality-selector::-webkit-scrollbar-thumb,
-        .value-selector::-webkit-scrollbar-thumb,
-        .season-selector::-webkit-scrollbar-thumb {
-            background: #1a365d;
-            border-radius: 4px;
+        select option:nth-child(even) {
+            background: #f9f9f9;
         }
-        body.dark .team-selector::-webkit-scrollbar-thumb,
-        body.dark .nationality-selector::-webkit-scrollbar-thumb,
-        body.dark .value-selector::-webkit-scrollbar-thumb,
-        body.dark .season-selector::-webkit-scrollbar-thumb {
-            background: #2c5282;
+        body.dark select option:nth-child(even) {
+            background: #3a3a3a;
+        }
+        select option:nth-child(odd) {
+            background: #ffffff;
+        }
+        body.dark select option:nth-child(odd) {
+            background: #2a2a2a;
         }
         .team-selector {
             width: auto;
@@ -401,26 +439,18 @@
         .season-selector {
             width: 150px;
         }
-        select option {
-            background: white;
-            color: black;
-        }
-        body.dark select option {
-            background: #333;
-            color: white;
-        }
         .reset-button {
             background: #e74c3c;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 25px;
-            height: 25px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
             position: relative;
             transition: background-color 0.3s;
         }
@@ -500,13 +530,13 @@
             background: white;
             border-radius: 10px;
             padding: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             display: none;
             transition: background-color 0.3s;
         }
         body.dark .advanced-search-content {
             background: #2a2a2a;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
         .advanced-search-content.show {
             display: block;
@@ -536,15 +566,19 @@
         }
         .position-options {
             display: flex;
-            gap: 10px;
+            gap: 14px;
             flex-wrap: wrap;
         }
         .position-option {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             color: #333;
             transition: color 0.3s;
+            white-space: nowrap;
+        }
+        .position-option.all-option {
+            margin-right: 16px;
         }
         body.dark .position-option {
             color: #ddd;
@@ -770,18 +804,10 @@
             border-radius: 2px;
             transform: translateY(-50%);
         }
-        #gk-range {
-            background: #28a745;
-        }
-        #df-range {
-            background: #007bff;
-        }
-        #mf-range {
-            background: #ffc107;
-        }
-        #fw-range {
-            background: #dc3545;
-        }
+        #gk-range { background: #28a745; }
+        #df-range { background: #007bff; }
+        #mf-range { background: #ffc107; }
+        #fw-range { background: #dc3545; }
         .attribute-slider-thumb {
             position: absolute;
             top: 50%;
@@ -792,22 +818,10 @@
             cursor: pointer;
             z-index: 2;
         }
-        #gk-thumb-min,
-        #gk-thumb-max {
-            background: #28a745;
-        }
-        #df-thumb-min,
-        #df-thumb-max {
-            background: #007bff;
-        }
-        #mf-thumb-min,
-        #mf-thumb-max {
-            background: #ffc107;
-        }
-        #fw-thumb-min,
-        #fw-thumb-max {
-            background: #dc3545;
-        }
+        #gk-thumb-min, #gk-thumb-max { background: #28a745; }
+        #df-thumb-min, #df-thumb-max { background: #007bff; }
+        #mf-thumb-min, #mf-thumb-max { background: #ffc107; }
+        #fw-thumb-min, #fw-thumb-max { background: #dc3545; }
         .attribute-slider-thumb::after {
             content: '';
             position: absolute;
@@ -827,9 +841,7 @@
             color: #666;
             transition: color 0.3s;
         }
-        body.dark .attribute-values {
-            color: #aaa;
-        }
+        body.dark .attribute-values { color: #aaa; }
         .attr-ticks {
             position: relative;
             height: 14px;
@@ -845,9 +857,7 @@
             margin: 0 auto;
             transition: background-color 0.3s;
         }
-        body.dark .attr-tick-mark {
-            background: #777;
-        }
+        body.dark .attr-tick-mark { background: #777; }
         .attr-tick-label {
             position: absolute;
             top: 10px;
@@ -858,9 +868,7 @@
             white-space: nowrap;
             transition: color 0.3s;
         }
-        body.dark .attr-tick-label {
-            color: #aaa;
-        }
+        body.dark .attr-tick-label { color: #aaa; }
         .experience-input {
             width: 100%;
             padding: 5px;
@@ -887,15 +895,9 @@
             width: 200px;
             transition: background-color 0.3s;
         }
-        body.dark .reset-all-button {
-            background: #5a6268;
-        }
-        .reset-all-button:hover {
-            background: #5a6268;
-        }
-        body.dark .reset-all-button:hover {
-            background: #4a5157;
-        }
+        body.dark .reset-all-button { background: #5a6268; }
+        .reset-all-button:hover { background: #5a6268; }
+        body.dark .reset-all-button:hover { background: #4a5157; }
         .filter-footer {
             display: flex;
             justify-content: space-between;
@@ -923,21 +925,10 @@
             pointer-events: none;
             z-index: 100;
         }
-        body.dark .back-to-top {
-            background: #2c5282;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-        .back-to-top.show {
-            opacity: 1;
-            pointer-events: all;
-        }
-        .back-to-top:hover {
-            background: #2c5282;
-            transform: translateY(-2px);
-        }
-        body.dark .back-to-top:hover {
-            background: #3f6a9e;
-        }
+        body.dark .back-to-top { background: #2c5282; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); }
+        .back-to-top.show { opacity: 1; pointer-events: all; }
+        .back-to-top:hover { background: #2c5282; transform: translateY(-2px); }
+        body.dark .back-to-top:hover { background: #3f6a9e; }
         #loading {
             text-align: center;
             margin: 20px auto;
@@ -945,9 +936,7 @@
             color: #1a365d;
             transition: color 0.3s;
         }
-        body.dark #loading {
-            color: #a8c3e6;
-        }
+        body.dark #loading { color: #a8c3e6; }
         #loading::after {
             content: '';
             display: inline-block;
@@ -960,17 +949,10 @@
             animation: spin 1s linear infinite;
             transition: border-color 0.3s;
         }
-        body.dark #loading::after {
-            border-color: #a8c3e6;
-            border-top-color: transparent;
-        }
+        body.dark #loading::after { border-color: #a8c3e6; border-top-color: transparent; }
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         .modal {
             position: fixed;
@@ -979,15 +961,13 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0,0,0,0.5);
             display: none;
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s;
         }
-        body.dark .modal {
-            background: rgba(255, 255, 255, 0.1);
-        }
+        body.dark .modal { background: rgba(255,255,255,0.1); }
         .modal-content {
             background: white;
             padding: 20px;
@@ -996,310 +976,201 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             transition: background-color 0.3s, box-shadow 0.3s;
             scrollbar-width: thin;
             scrollbar-color: #1a365d #f0f0f0;
         }
-        body.dark .modal-content {
-            background: #2a2a2a;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            scrollbar-color: #2c5282 #444;
-        }
-        .modal-content::-webkit-scrollbar {
-            width: 8px;
-        }
-        .modal-content::-webkit-scrollbar-track {
-            background: #f0f0f0;
-            border-radius: 4px;
-        }
-        body.dark .modal-content::-webkit-scrollbar-track {
-            background: #444;
-        }
-        .modal-content::-webkit-scrollbar-thumb {
-            background: #1a365d;
-            border-radius: 4px;
-        }
-        body.dark .modal-content::-webkit-scrollbar-thumb {
-            background: #2c5282;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        body.dark .close {
-            color: #777;
-        }
-        .close:hover {
-            color: black;
-        }
-        body.dark .close:hover {
-            color: #ddd;
-        }
+        body.dark .modal-content { background: #2a2a2a; box-shadow: 0 10px 30px rgba(0,0,0,0.5); scrollbar-color: #2c5282 #444; }
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 4px; }
+        body.dark .modal-content::-webkit-scrollbar-track { background: #444; }
+        .modal-content::-webkit-scrollbar-thumb { background: #1a365d; border-radius: 4px; }
+        body.dark .modal-content::-webkit-scrollbar-thumb { background: #2c5282; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s; }
+        body.dark .close { color: #777; }
+        .close:hover { color: black; }
+        body.dark .close:hover { color: #ddd; }
         .team-header img[alt*="stadium"] {
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s, box-shadow 0.3s;
+            border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: border-color 0.3s, box-shadow 0.3s;
         }
-        body.dark .team-header img[alt*="stadium"] {
-            border-color: #555;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        body.dark .team-header img[alt*="stadium"] { border-color: #555; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #ffffff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 300;
+            transition: width 0.3s ease, background-color 0.3s;
+            width: var(--sidebar-width);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
-        #darkModeToggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(145deg, #2c3e50, #1e2a36);
+        body.dark .sidebar { background: #1e1e1e; }
+        .sidebar.expanded {
+            width: var(--sidebar-expanded);
+        }
+        .sidebar-toggle {
+            width: 100%;
+            height: 40px;
+            background: transparent;
             border: none;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
+            color: #1a365d;
+            font-size: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
-            padding: 0;
+            transition: color 0.3s;
+            flex-shrink: 0;
         }
-        #darkModeToggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        body.dark .sidebar-toggle { color: #a8c3e6; }
+        .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            flex-grow: 1;
         }
-        #darkModeToggle svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-            transition: fill 0.3s;
+        .sidebar.expanded .sidebar-content {
+            opacity: 1;
+            pointer-events: all;
         }
-        body.dark #darkModeToggle {
-            background: linear-gradient(145deg, #f1c40f, #e67e22);
-        }
-        body.dark #darkModeToggle svg {
-            fill: #1a1a1a;
-        }
-        #tsmButton {
-            position: absolute;
-            top: 70px;
-            right: 20px;
-            background: linear-gradient(145deg, #27ae60, #2ecc71);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            cursor: pointer;
+        .sidebar-section-title {
+            color: #1a365d;
             font-weight: 600;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 13px;
+            margin-bottom: 2px;
+            padding-left: 5px;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        #tsmButton:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        body.dark .sidebar-section-title {
+            color: #a8c3e6;
         }
-        .team-player {
-            margin-bottom: 10px;
-            padding: 5px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
+        .sidebar-link {
+            background: none;
+            border: none;
+            padding: 6px 5px;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1a365d;
+            cursor: pointer;
+            text-align: left;
+            transition: color 0.3s;
+            text-decoration: none;
+            display: block;
+            width: 100%;
         }
-        body.dark .team-player {
-            border-bottom-color: #444;
+        .sidebar-link:hover {
+            color: #2c5282;
         }
-        .team-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
+        body.dark .sidebar-link {
+            color: #a8c3e6;
         }
-        .team-badge {
-            width: 96px;
-            height: 96px;
+        body.dark .sidebar-link:hover {
+            color: #c0d4f0;
         }
-        .team-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 10px;
+        #season-select {
+            width: 100%;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            background: #f4f4f4;
+            border: 1px solid #ccc;
+            color: #333;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        .team-stats p {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin: 0;
-        }
-        .team-stats svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
+        body.dark #season-select {
+            background: #333;
+            color: #ddd;
+            border-color: #555;
         }
         .status-tag {
             display: inline-block;
-            background-color: #e74c3c;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            margin-left: 5px;
-            cursor: pointer;
-            position: relative;
+            background-color: #e74c3c; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-left: 5px; cursor: pointer; position: relative;
         }
         .status-tag:hover::after {
-            content: attr(title);
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            z-index: 10;
+            content: attr(title); position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; white-space: nowrap; z-index: 10;
         }
-        body.dark .status-tag:hover::after {
-            background: #555;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th,
-        td {
-            padding: 8px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-        body.dark th,
-        body.dark td {
-            border-bottom-color: #444;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        body.dark th {
-            background-color: #333;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .squad-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .squad-table th,
-        .squad-table td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        body.dark .squad-table th,
-        body.dark .squad-table td {
-            border-bottom-color: #444;
-        }
-        .squad-table th {
-            background-color: #f2f2f2;
-        }
-        body.dark .squad-table th {
-            background-color: #333;
-        }
-        .no-results {
-            text-align: center;
-            color: #666;
-            font-size: 16px;
-        }
-        body.dark .no-results {
-            color: #aaa;
-        }
+        body.dark .status-tag:hover::after { background: #555; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 8px; text-align: center; border-bottom: 1px solid #ddd; }
+        body.dark th, body.dark td { border-bottom-color: #444; }
+        th { background-color: #f2f2f2; }
+        body.dark th { background-color: #333; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .squad-table { width: 100%; border-collapse: collapse; }
+        .squad-table th, .squad-table td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        body.dark .squad-table th, body.dark .squad-table td { border-bottom-color: #444; }
+        .squad-table th { background-color: #f2f2f2; }
+        body.dark .squad-table th { background-color: #333; }
+        .no-results { text-align: center; color: #666; font-size: 16px; }
+        body.dark .no-results { color: #aaa; }
         .modal-season-select {
-            margin-left: auto;
-            padding: 5px 10px;
-            border-radius: 20px;
-            border: 1px solid #ccc;
-            background: #f9f9f9;
-            font-size: 14px;
-            cursor: pointer;
+            margin-left: auto; padding: 5px 10px; border-radius: 20px; border: 1px solid #ccc; background: #f9f9f9; font-size: 14px; cursor: pointer;
         }
-        body.dark .modal-season-select {
-            background: #333;
-            border-color: #555;
-            color: #ddd;
-        }
+        body.dark .modal-season-select { background: #333; border-color: #555; color: #ddd; }
     </style>
 </head>
 <body>
-    <div id="fullscreen-link" style="display: none; position: absolute; top: 10px; left: 10px; background: #1a365d; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; transition: background-color 0.3s;">
-        ↗ Ver en pantalla completa
+    <div id="sidebar" class="sidebar">
+        <button id="sidebar-toggle" class="sidebar-toggle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        </button>
+        <div class="sidebar-content">
+            <div class="sidebar-section-title">Seleccionar periodo</div>
+            <select id="season-select">
+                <option value="37-mid" selected>Temp. 37 - Intermedio</option>
+                <option value="37-start">Temp. 37 - Inicio</option>
+                <option value="36">Temp. 36 - Final</option>
+                <option value="36-start">Temp. 36 - Inicio</option>
+            </select>
+            <button id="toggle-card-size" class="sidebar-link">Aumentar tarjetas</button>
+            <button id="darkModeToggle" class="sidebar-link">Modo oscuro</button>
+            <button id="tsmButton" class="sidebar-link">Ir a TSM</button>
+        </div>
     </div>
 
-    <button id="toggle-card-size" style="display: none; position: absolute; top: 40px; left: 10px; background: linear-gradient(145deg, #3498db, #2980b9); color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 14px; font-weight: 600; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;">
-        Aumentar tarjetas
-    </button>
-    <select id="season-select" class="season-selector" style="position: absolute; top: 90px; left: 10px; width: 210px; background: linear-gradient(145deg, #34495e, #2c3e50); color: white; border: none; padding: 8px 12px; border-radius: 30px; font-size: 14px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-        <option value="37-mid" selected>Temporada 37 - Intermedio</option>
-        <option value="37-start">Temporada 37 - Inicio</option>
-        <option value="36">Temporada 36 - Final</option>
-        <option value="36-start">Temporada 36 - Inicio</option>
-    </select>
-    <button id="darkModeToggle">
-        <svg viewbox="0 0 24 24" style="width: 24px; height: 24px;">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"></path>
-        </svg>
-    </button>
-
-    <button id="tsmButton">
-        Ir a TSM
-    </button>
-
-    <h1>
-        Buscador de jugadores
-    </h1>
+    <h1>Buscador de jugadores</h1>
 
     <div class="search-container">
         <input placeholder="Buscar jugador por nombre..." id="search" type="text" />
-        <button id="search-clear" class="search-clear">
-            ×
-        </button>
+        <button id="search-clear" class="search-clear">×</button>
+        <span id="update-date" class="update-date"></span>
     </div>
     <div id="search-note" class="search-note">💻 Para una carga más fiable y completa, se recomienda usar un PC</div>
 
-    <div id="update-info" class="update-info">
-    </div>
+    <div id="update-info" class="update-info"></div>
 
     <div class="advanced-search-container">
-
         <button id="advanced-search-toggle" class="advanced-search-toggle">
             Búsqueda avanzada <span class="arrow down">▼</span>
         </button>
 
         <div id="advanced-search-content" class="advanced-search-content">
-
             <div class="filter-row">
                 <label for="team-select">Equipo:</label>
-                <select class="team-selector" id="team-select">
-                    <option value="">Todos los equipos</option>
-                </select>
-                <button title="Reiniciar selección" id="reset-team" class="reset-button">
-                    ×
-                </button>
+                <select class="team-selector" id="team-select"><option value="">Todos los equipos</option></select>
+                <button title="Reiniciar selección" id="reset-team" class="reset-button">×</button>
+
                 <label for="nationality-select">País:</label>
-                <select class="nationality-selector" id="nationality-select">
-                    <option value="">Todos los países</option>
-                </select>
-                <button title="Reiniciar selección" id="reset-nationality" class="reset-button">
-                    ×
-                </button>
+                <select class="nationality-selector" id="nationality-select"><option value="">Todos los países</option></select>
+                <button title="Reiniciar selección" id="reset-nationality" class="reset-button">×</button>
+
                 <label for="value-select">Valor:</label>
                 <select class="value-selector" id="value-select">
                     <option value="">Todos los valores</option>
@@ -1308,49 +1179,42 @@
                     <option value="21-30">21-30M</option>
                     <option value=">30">Más de 30M</option>
                 </select>
-                <button title="Reiniciar selección" id="reset-value" class="reset-button">
-                    ×
-                </button>
+                <button title="Reiniciar selección" id="reset-value" class="reset-button">×</button>
 
+                <label for="goals-filter">Goles:</label>
+                <input type="number" id="goals-filter" class="filter-number-input" placeholder="Mín. goles" min="0" max="99" maxlength="2" />
+
+                <label for="assists-filter">Asi.:</label>
+                <input type="number" id="assists-filter" class="filter-number-input" placeholder="Mín. asi." min="0" max="99" maxlength="2" />
             </div>
 
             <div class="advanced-search-layout">
-
                 <div class="advanced-search-left">
-
                     <div class="position-filter">
                         <label>Posición:</label>
                         <div class="position-options">
-
-                            <div class="position-option">
-                                <input checked="" id="position-all" type="checkbox" />
+                            <div class="position-option all-option">
                                 <label for="position-all">Todos</label>
+                                <input checked id="position-all" type="checkbox" />
                             </div>
-
                             <div class="position-option">
-                                <input id="position-gk" type="checkbox" />
                                 <label for="position-gk">GK</label>
+                                <input id="position-gk" type="checkbox" />
                             </div>
-
                             <div class="position-option">
-                                <input id="position-df" type="checkbox" />
                                 <label for="position-df">DF</label>
+                                <input id="position-df" type="checkbox" />
                             </div>
-
                             <div class="position-option">
-                                <input id="position-mf" type="checkbox" />
                                 <label for="position-mf">MF</label>
+                                <input id="position-mf" type="checkbox" />
                             </div>
-
                             <div class="position-option">
-                                <input id="position-fw" type="checkbox" />
                                 <label for="position-fw">FW</label>
+                                <input id="position-fw" type="checkbox" />
                             </div>
-
                         </div>
-
                     </div>
-
                     <div class="age-filter">
                         <label>Edad:</label>
                         <div class="slider-container">
@@ -1359,10 +1223,7 @@
                             <div data-value="16" id="thumb-min" class="slider-thumb"></div>
                             <div data-value="40" id="thumb-max" class="slider-thumb"></div>
                         </div>
-                        <div class="age-values">
-                            <span id="min-age">16 años</span>
-                            <span id="max-age">40 años</span>
-                        </div>
+                        <div class="age-values"><span id="min-age">16 años</span><span id="max-age">40 años</span></div>
                         <div class="slider-ticks" id="age-ticks">
                             <div class="tick-mark"><span class="tick-label">16</span></div>
                             <div class="tick-mark"><span class="tick-label">20</span></div>
@@ -1372,19 +1233,12 @@
                             <div class="tick-mark"><span class="tick-label">40</span></div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="advanced-search-right">
-
                     <div class="attribute-filters">
-
-                        <div class="attribute-section-title">
-                            Franja de media
-                        </div>
-
+                        <div class="attribute-section-title">Franja de media</div>
                         <div class="attribute-filters-grid">
-
                             <div class="attribute-filter">
                                 <label>GK</label>
                                 <div class="attribute-slider-container">
@@ -1393,10 +1247,7 @@
                                     <div data-value="1" id="gk-thumb-min" class="attribute-slider-thumb"></div>
                                     <div data-value="28" id="gk-thumb-max" class="attribute-slider-thumb"></div>
                                 </div>
-                                <div class="attribute-values">
-                                    <span id="gk-min-value">1</span>
-                                    <span id="gk-max-value">28</span>
-                                </div>
+                                <div class="attribute-values"><span id="gk-min-value">1</span><span id="gk-max-value">28</span></div>
                                 <div class="attr-ticks" id="gk-ticks">
                                     <div class="attr-tick-mark"><span class="attr-tick-label">1</span></div>
                                     <div class="attr-tick-mark"><span class="attr-tick-label">5</span></div>
@@ -1407,7 +1258,6 @@
                                     <div class="attr-tick-mark"><span class="attr-tick-label">28</span></div>
                                 </div>
                             </div>
-
                             <div class="attribute-filter">
                                 <label>DF</label>
                                 <div class="attribute-slider-container">
@@ -1416,10 +1266,7 @@
                                     <div data-value="1" id="df-thumb-min" class="attribute-slider-thumb"></div>
                                     <div data-value="28" id="df-thumb-max" class="attribute-slider-thumb"></div>
                                 </div>
-                                <div class="attribute-values">
-                                    <span id="df-min-value">1</span>
-                                    <span id="df-max-value">28</span>
-                                </div>
+                                <div class="attribute-values"><span id="df-min-value">1</span><span id="df-max-value">28</span></div>
                                 <div class="attr-ticks" id="df-ticks">
                                     <div class="attr-tick-mark"><span class="attr-tick-label">1</span></div>
                                     <div class="attr-tick-mark"><span class="attr-tick-label">5</span></div>
@@ -1430,7 +1277,6 @@
                                     <div class="attr-tick-mark"><span class="attr-tick-label">28</span></div>
                                 </div>
                             </div>
-
                             <div class="attribute-filter">
                                 <label>MF</label>
                                 <div class="attribute-slider-container">
@@ -1439,10 +1285,7 @@
                                     <div data-value="1" id="mf-thumb-min" class="attribute-slider-thumb"></div>
                                     <div data-value="28" id="mf-thumb-max" class="attribute-slider-thumb"></div>
                                 </div>
-                                <div class="attribute-values">
-                                    <span id="mf-min-value">1</span>
-                                    <span id="mf-max-value">28</span>
-                                </div>
+                                <div class="attribute-values"><span id="mf-min-value">1</span><span id="mf-max-value">28</span></div>
                                 <div class="attr-ticks" id="mf-ticks">
                                     <div class="attr-tick-mark"><span class="attr-tick-label">1</span></div>
                                     <div class="attr-tick-mark"><span class="attr-tick-label">5</span></div>
@@ -1453,7 +1296,6 @@
                                     <div class="attr-tick-mark"><span class="attr-tick-label">28</span></div>
                                 </div>
                             </div>
-
                             <div class="attribute-filter">
                                 <label>FW</label>
                                 <div class="attribute-slider-container">
@@ -1462,10 +1304,7 @@
                                     <div data-value="1" id="fw-thumb-min" class="attribute-slider-thumb"></div>
                                     <div data-value="28" id="fw-thumb-max" class="attribute-slider-thumb"></div>
                                 </div>
-                                <div class="attribute-values">
-                                    <span id="fw-min-value">1</span>
-                                    <span id="fw-max-value">28</span>
-                                </div>
+                                <div class="attribute-values"><span id="fw-min-value">1</span><span id="fw-max-value">28</span></div>
                                 <div class="attr-ticks" id="fw-ticks">
                                     <div class="attr-tick-mark"><span class="attr-tick-label">1</span></div>
                                     <div class="attr-tick-mark"><span class="attr-tick-label">5</span></div>
@@ -1476,76 +1315,39 @@
                                     <div class="attr-tick-mark"><span class="attr-tick-label">28</span></div>
                                 </div>
                             </div>
-
                         </div>
-
-                        <div style="margin-top: 15px;" class="attribute-section-title">
-                            Experiencia mínima
-                        </div>
-
+                        <div style="margin-top: 15px;" class="attribute-section-title">Experiencia mínima</div>
                         <div class="attribute-filters-grid">
-
-                            <div class="attribute-filter">
-                                <input max="999" min="1" placeholder="GK (KAb)" id="gk-experience" class="experience-input" type="number" />
-                            </div>
-
-                            <div class="attribute-filter">
-                                <input max="999" min="1" placeholder="DF (TAb)" id="df-experience" class="experience-input" type="number" />
-                            </div>
-
-                            <div class="attribute-filter">
-                                <input max="999" min="1" placeholder="MF (PAb)" id="mf-experience" class="experience-input" type="number" />
-                            </div>
-
-                            <div class="attribute-filter">
-                                <input max="999" min="1" placeholder="FW (SAb)" id="fw-experience" class="experience-input" type="number" />
-                            </div>
-
+                            <div class="attribute-filter"><input max="999" min="1" placeholder="GK (KAb)" id="gk-experience" class="experience-input" type="number" /></div>
+                            <div class="attribute-filter"><input max="999" min="1" placeholder="DF (TAb)" id="df-experience" class="experience-input" type="number" /></div>
+                            <div class="attribute-filter"><input max="999" min="1" placeholder="MF (PAb)" id="mf-experience" class="experience-input" type="number" /></div>
+                            <div class="attribute-filter"><input max="999" min="1" placeholder="FW (SAb)" id="fw-experience" class="experience-input" type="number" /></div>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
             <div class="filter-footer">
-
-                <button id="reset-all" class="reset-all-button">
-                    Reiniciar todos los filtros
-                </button>
-
-                <div id="player-counter" class="player-counter">
-                    0 jugadores
-                </div>
-
+                <button id="reset-all" class="reset-all-button">Reiniciar todos los filtros</button>
+                <div id="player-counter" class="player-counter">0 jugadores</div>
             </div>
-
         </div>
-
     </div>
 
-    <div id="loading">
-        Cargando base de datos... puede tardar más de 30 segundos
-    </div>
+    <div id="loading">Cargando base de datos... puede tardar más de 30 segundos</div>
 
     <div id="results">
+        <div id="results-loader" class="results-loader"><div class="loader-spinner"></div></div>
     </div>
 
-    <button id="back-to-top" class="back-to-top">
-        ↑
-    </button>
+    <button id="back-to-top" class="back-to-top">↑</button>
 
     <div class="modal" id="myModal">
-
         <div class="modal-content">
             <span class="close">×</span>
-            <div id="modalBody">
-            </div>
-
+            <div id="modalBody"></div>
         </div>
-
     </div>
+
     <script>
         const headerFields = [
             'Name', 'Age', 'Nat', 'St', 'Tk', 'Ps', 'Sh', 'Ag', 'KAb', 'TAb', 'PAb', 'SAb',
@@ -1559,25 +1361,25 @@
         let stadia = {};
         let teams = [];
         let nationalities = [];
+        let lastUpdateDate = '';
 
         let currentSeason = '37-mid';
         const seasonData = {};
 
+        function formatNumber(num) {
+            if (num == null || isNaN(num)) return num;
+            const parts = num.toString().split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return parts.join(',');
+        }
+
         function isMobileDevice() {
             return (window.innerWidth <= 768) || ('ontouchstart' in window);
         }
-
         function updateMobileNote() {
             const note = document.getElementById('search-note');
-            if (note) {
-                if (isMobileDevice()) {
-                    note.classList.add('show');
-                } else {
-                    note.classList.remove('show');
-                }
-            }
+            if (note) note.classList.toggle('show', isMobileDevice());
         }
-
         window.addEventListener('resize', updateMobileNote);
 
         function calculatePlayerValue(player) {
@@ -1598,108 +1400,17 @@
             const secondaryAttrs = attrs.filter((_, index) => index !== positionIndex);
             const secondaryExps = [kab, tab, pab, sab].filter((_, index) => index !== positionIndex);
 
-            let base = 0;
-            let ageBonusAmount = 0;
-            let secAttr4_8Bonus = 0;
-            let secAttrGt8Bonus = 0;
-            let expGt500Bonus = 0;
-            let expGt800Bonus = 0;
-            let secExpBonus = 0;
-            let ageGt30Penalty = 0;
-            let ageGt35Penalty = 0;
-
-            if (maxAttr <= 15) {
-                return 0;
-            } else if (maxAttr === 16) {
-                base = 0;
-                ageBonusAmount = 0.5;
-                secAttr4_8Bonus = 0.5;
-                secAttrGt8Bonus = 1;
-                expGt500Bonus = 0.5;
-                expGt800Bonus = 1;
-                secExpBonus = 0.5;
-                ageGt30Penalty = 0.5;
-                ageGt35Penalty = 1;
-            } else if (maxAttr === 17) {
-                base = 1.5;
-                ageBonusAmount = 0.5;
-                secAttr4_8Bonus = 0.5;
-                secAttrGt8Bonus = 1;
-                expGt500Bonus = 1;
-                expGt800Bonus = 1.5;
-                secExpBonus = 0.5;
-                ageGt30Penalty = 0.5;
-                ageGt35Penalty = 1;
-            } else if (maxAttr === 18) {
-                base = 5;
-                ageBonusAmount = 2;
-                secAttr4_8Bonus = 0.5;
-                secAttrGt8Bonus = 1.5;
-                expGt500Bonus = 2;
-                expGt800Bonus = 3.5;
-                secExpBonus = 0.5;
-                ageGt30Penalty = 1;
-                ageGt35Penalty = 3;
-            } else if (maxAttr === 19) {
-                base = 8;
-                ageBonusAmount = 2;
-                secAttr4_8Bonus = 1.5;
-                secAttrGt8Bonus = 3.5;
-                expGt500Bonus = 4;
-                expGt800Bonus = 6.5;
-                secExpBonus = 1;
-                ageGt30Penalty = 2;
-                ageGt35Penalty = 4;
-            } else if (maxAttr === 20) {
-                base = 15;
-                ageBonusAmount = 2;
-                secAttr4_8Bonus = 2.5;
-                secAttrGt8Bonus = 4.5;
-                expGt500Bonus = 5;
-                expGt800Bonus = 7.5;
-                secExpBonus = 1.5;
-                ageGt30Penalty = 3;
-                ageGt35Penalty = 6;
-            } else if (maxAttr === 21) {
-                base = 22;
-                ageBonusAmount = 2;
-                secAttr4_8Bonus = 3.5;
-                secAttrGt8Bonus = 5.5;
-                expGt500Bonus = 5.5;
-                expGt800Bonus = 8;
-                secExpBonus = 1.5;
-                ageGt30Penalty = 4;
-                ageGt35Penalty = 8;
-            } else if (maxAttr === 22) {
-                base = 30;
-                ageBonusAmount = 2;
-                secAttr4_8Bonus = 3.5;
-                secAttrGt8Bonus = 6;
-                expGt500Bonus = 6;
-                expGt800Bonus = 8.5;
-                secExpBonus = 1.5;
-                ageGt30Penalty = 5;
-                ageGt35Penalty = 10;
-            } else if (maxAttr === 23) {
-                base = 40;
-                ageBonusAmount = 2;
-                secAttr4_8Bonus = 3.5;
-                secAttrGt8Bonus = 6;
-                expGt500Bonus = 6;
-                secExpBonus = 1.5;
-                ageGt30Penalty = 8;
-                ageGt35Penalty = 12;
-            } else {
-                base = 50;
-                ageBonusAmount = 2;
-                secAttr4_8Bonus = 3.5;
-                secAttrGt8Bonus = 6;
-                expGt500Bonus = 6;
-                expGt800Bonus = 8.5;
-                secExpBonus = 1.5;
-                ageGt30Penalty = 10;
-                ageGt35Penalty = 15;
-            }
+            let base = 0, ageBonusAmount = 0, secAttr4_8Bonus = 0, secAttrGt8Bonus = 0, expGt500Bonus = 0, expGt800Bonus = 0, secExpBonus = 0, ageGt30Penalty = 0, ageGt35Penalty = 0;
+            if (maxAttr <= 15) return 0;
+            else if (maxAttr === 16) { base = 0; ageBonusAmount = 0.5; secAttr4_8Bonus = 0.5; secAttrGt8Bonus = 1; expGt500Bonus = 0.5; expGt800Bonus = 1; secExpBonus = 0.5; ageGt30Penalty = 0.5; ageGt35Penalty = 1; }
+            else if (maxAttr === 17) { base = 1.5; ageBonusAmount = 0.5; secAttr4_8Bonus = 0.5; secAttrGt8Bonus = 1; expGt500Bonus = 1; expGt800Bonus = 1.5; secExpBonus = 0.5; ageGt30Penalty = 0.5; ageGt35Penalty = 1; }
+            else if (maxAttr === 18) { base = 5; ageBonusAmount = 2; secAttr4_8Bonus = 0.5; secAttrGt8Bonus = 1.5; expGt500Bonus = 2; expGt800Bonus = 3.5; secExpBonus = 0.5; ageGt30Penalty = 1; ageGt35Penalty = 3; }
+            else if (maxAttr === 19) { base = 8; ageBonusAmount = 2; secAttr4_8Bonus = 1.5; secAttrGt8Bonus = 3.5; expGt500Bonus = 4; expGt800Bonus = 6.5; secExpBonus = 1; ageGt30Penalty = 2; ageGt35Penalty = 4; }
+            else if (maxAttr === 20) { base = 15; ageBonusAmount = 2; secAttr4_8Bonus = 2.5; secAttrGt8Bonus = 4.5; expGt500Bonus = 5; expGt800Bonus = 7.5; secExpBonus = 1.5; ageGt30Penalty = 3; ageGt35Penalty = 6; }
+            else if (maxAttr === 21) { base = 22; ageBonusAmount = 2; secAttr4_8Bonus = 3.5; secAttrGt8Bonus = 5.5; expGt500Bonus = 5.5; expGt800Bonus = 8; secExpBonus = 1.5; ageGt30Penalty = 4; ageGt35Penalty = 8; }
+            else if (maxAttr === 22) { base = 30; ageBonusAmount = 2; secAttr4_8Bonus = 3.5; secAttrGt8Bonus = 6; expGt500Bonus = 6; expGt800Bonus = 8.5; secExpBonus = 1.5; ageGt30Penalty = 5; ageGt35Penalty = 10; }
+            else if (maxAttr === 23) { base = 40; ageBonusAmount = 2; secAttr4_8Bonus = 3.5; secAttrGt8Bonus = 6; expGt500Bonus = 6; secExpBonus = 1.5; ageGt30Penalty = 8; ageGt35Penalty = 12; }
+            else { base = 50; ageBonusAmount = 2; secAttr4_8Bonus = 3.5; secAttrGt8Bonus = 6; expGt500Bonus = 6; expGt800Bonus = 8.5; secExpBonus = 1.5; ageGt30Penalty = 10; ageGt35Penalty = 15; }
 
             const ageBonus = age < 25 ? ageBonusAmount : 0;
             const secSum = secondaryAttrs.reduce((a, b) => a + b, 0);
@@ -1708,18 +1419,13 @@
             const secExpTotalBonus = secondaryExps.filter(exp => exp > 800).length * secExpBonus;
             const agePenalty = age > 35 ? -ageGt35Penalty : (age > 30 ? -ageGt30Penalty : 0);
             let totalValue = base + ageBonus + secAttrBonus + expBonus + secExpTotalBonus + agePenalty;
-
-            if (maxAttr >= 25) {
-                totalValue += (maxAttr - 24) * 10;
-            }
-
+            if (maxAttr >= 25) totalValue += (maxAttr - 24) * 10;
             return Math.max(totalValue, 0);
         }
 
         function calculateSalary(player) {
-            const salaryTable = { 15: 0.5, 16: 1, 17: 2, 18: 3, 19: 4, 20: 5, 21: 6, 22: 7, 23: 8, 24: 9 };
-            const attrs = [parseInt(player.St) || 0, parseInt(player.Tk) || 0, parseInt(player.Ps) || 0, parseInt(
-            player.Sh) || 0];
+            const salaryTable = {15:0.5,16:1,17:2,18:3,19:4,20:5,21:6,22:7,23:8,24:9};
+            const attrs = [parseInt(player.St)||0, parseInt(player.Tk)||0, parseInt(player.Ps)||0, parseInt(player.Sh)||0];
             let maxAttr = Math.max(...attrs);
             if (maxAttr >= 25) maxAttr = 24;
             return salaryTable[maxAttr] || 0;
@@ -1729,34 +1435,36 @@
             if (!name.includes('_')) return name;
             if (name.split('_').length === 3) {
                 const parts = name.split('_');
-                if (parts[0].length === 1) {
-                    return `${parts[0]}. ${parts[1]} ${parts[2]}`;
-                }
+                if (parts[0].length === 1) return `${parts[0]}. ${parts[1]} ${parts[2]}`;
             }
             const parts = name.split('_');
             if (parts.length !== 2) return name.replace(/_/g, ' ');
-            const firstPart = parts[0];
-            const secondPart = parts[1];
-            if (secondPart.length === 1) {
-                return `${firstPart} ${secondPart}.`;
-            } else if (firstPart.length >= 4) {
-                return `${firstPart} ${secondPart}`;
-            } else if (firstPart.length >= 2 && firstPart.length <= 3) {
-                return `${firstPart} ${secondPart}`;
-            } else {
-                return `${firstPart}. ${secondPart}`;
-            }
+            const firstPart = parts[0], secondPart = parts[1];
+            if (secondPart.length === 1) return `${firstPart} ${secondPart}.`;
+            else if (firstPart.length >= 4) return `${firstPart} ${secondPart}`;
+            else if (firstPart.length >= 2 && firstPart.length <= 3) return `${firstPart} ${secondPart}`;
+            else return `${firstPart}. ${secondPart}`;
         }
 
         function getPlayerPosition(player) {
             const attributes = {
-                'GK': parseInt(player.St) || 0,
-                'DF': parseInt(player.Tk) || 0,
-                'MF': parseInt(player.Ps) || 0,
-                'FW': parseInt(player.Sh) || 0
+                'GK': parseInt(player.St)||0,
+                'DF': parseInt(player.Tk)||0,
+                'MF': parseInt(player.Ps)||0,
+                'FW': parseInt(player.Sh)||0
             };
             const maxValue = Math.max(...Object.values(attributes));
             return Object.keys(attributes).filter(pos => attributes[pos] === maxValue);
+        }
+
+        let filterTimeout = null;
+        function scheduleFilter() {
+            document.getElementById('results-loader').style.display = 'flex';
+            if (filterTimeout) clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(() => {
+                filterPlayers();
+                document.getElementById('results-loader').style.display = 'none';
+            }, 80);
         }
 
         function setupPositionCheckboxes() {
@@ -1768,18 +1476,14 @@
 
             function handleCheckboxChange() {
                 if (this === allCheckbox && this.checked) {
-                    gkCheckbox.checked = false;
-                    dfCheckbox.checked = false;
-                    mfCheckbox.checked = false;
-                    fwCheckbox.checked = false;
+                    gkCheckbox.checked = dfCheckbox.checked = mfCheckbox.checked = fwCheckbox.checked = false;
                 } else if (this !== allCheckbox && this.checked) {
                     allCheckbox.checked = false;
                 }
-                filterPlayers();
+                scheduleFilter();
                 document.getElementById('search').value = '';
                 document.getElementById('search-clear').style.display = 'none';
             }
-
             allCheckbox.addEventListener('change', handleCheckboxChange);
             gkCheckbox.addEventListener('change', handleCheckboxChange);
             dfCheckbox.addEventListener('change', handleCheckboxChange);
@@ -1793,146 +1497,79 @@
             const sliderRange = document.getElementById('slider-range');
             const minAgeDisplay = document.getElementById('min-age');
             const maxAgeDisplay = document.getElementById('max-age');
-            const sliderContainer = document.querySelector('.slider-container');
-            const sliderTrack = document.querySelector('.slider-track');
-
-            const minAge = 16;
-            const maxAge = 40;
+            const sliderTrack = document.querySelector('.age-filter .slider-track');
+            const minAge = 16, maxAge = 40;
             let minValue = parseInt(thumbMin.getAttribute('data-value'));
             let maxValue = parseInt(thumbMax.getAttribute('data-value'));
 
             function updateRangeDisplay() {
                 const minPercent = ((minValue - minAge) / (maxAge - minAge)) * 100;
                 const maxPercent = ((maxValue - minAge) / (maxAge - minAge)) * 100;
-
                 thumbMin.style.left = `${minPercent}%`;
                 thumbMax.style.left = `${maxPercent}%`;
                 sliderRange.style.left = `${minPercent}%`;
                 sliderRange.style.width = `${maxPercent - minPercent}%`;
-
                 minAgeDisplay.textContent = `${minValue} años`;
                 maxAgeDisplay.textContent = `${maxValue} años`;
             }
 
-            function moveThumbToPosition(e, touch = false) {
-                const clientX = touch ? e.touches[0].clientX : e.clientX;
+            function handleMove(clientX) {
                 const trackRect = sliderTrack.getBoundingClientRect();
                 let newPercent = ((clientX - trackRect.left) / trackRect.width) * 100;
                 newPercent = Math.max(0, Math.min(100, newPercent));
                 const newValue = Math.round(minAge + (newPercent / 100) * (maxAge - minAge));
-
                 const minDiff = Math.abs(newValue - minValue);
                 const maxDiff = Math.abs(newValue - maxValue);
                 if (minDiff < maxDiff) {
-                    if (newValue < maxValue) {
-                        minValue = newValue;
-                        thumbMin.setAttribute('data-value', minValue);
-                    }
+                    if (newValue < maxValue) { minValue = newValue; thumbMin.setAttribute('data-value', minValue); }
                 } else {
-                    if (newValue > minValue) {
-                        maxValue = newValue;
-                        thumbMax.setAttribute('data-value', maxValue);
-                    }
+                    if (newValue > minValue) { maxValue = newValue; thumbMax.setAttribute('data-value', maxValue); }
                 }
-
                 updateRangeDisplay();
-                filterPlayers();
-                document.getElementById('search').value = '';
-                document.getElementById('search-clear').style.display = 'none';
+                scheduleFilter();
             }
 
-            sliderContainer.addEventListener('click', moveThumbToPosition);
-            sliderContainer.addEventListener('touchstart', (e) => {
-                moveThumbToPosition(e, true);
-            });
-
             function setupThumbDrag(thumb, isMin) {
-                let isDragging = false;
-
-                thumb.addEventListener('mousedown', (e) => {
-                    isDragging = true;
-                    e.preventDefault();
-                });
-
-                document.addEventListener('mousemove', (e) => {
-                    if (!isDragging) return;
-
+                let dragging = false;
+                thumb.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
+                document.addEventListener('mousemove', e => {
+                    if (!dragging) return;
                     const trackRect = sliderTrack.getBoundingClientRect();
                     let newPercent = ((e.clientX - trackRect.left) / trackRect.width) * 100;
                     newPercent = Math.max(0, Math.min(100, newPercent));
-
                     const newValue = Math.round(minAge + (newPercent / 100) * (maxAge - minAge));
-
-                    if (isMin) {
-                        if (newValue < maxValue) {
-                            minValue = newValue;
-                            thumb.setAttribute('data-value', minValue);
-                        }
-                    } else {
-                        if (newValue > minValue) {
-                            maxValue = newValue;
-                            thumb.setAttribute('data-value', maxValue);
-                        }
-                    }
-
+                    if (isMin) { if (newValue < maxValue) { minValue = newValue; thumb.setAttribute('data-value', minValue); } }
+                    else { if (newValue > minValue) { maxValue = newValue; thumb.setAttribute('data-value', maxValue); } }
                     updateRangeDisplay();
-                    filterPlayers();
-                    document.getElementById('search').value = '';
-                    document.getElementById('search-clear').style.display = 'none';
+                    scheduleFilter();
                 });
-
-                document.addEventListener('mouseup', () => {
-                    isDragging = false;
-                });
-
-                thumb.addEventListener('touchstart', (e) => {
-                    isDragging = true;
-                    e.preventDefault();
-                });
-
-                document.addEventListener('touchmove', (e) => {
-                    if (!isDragging) return;
-
+                document.addEventListener('mouseup', () => { dragging = false; });
+                thumb.addEventListener('touchstart', e => { dragging = true; e.preventDefault(); });
+                document.addEventListener('touchmove', e => {
+                    if (!dragging) return;
                     const touch = e.touches[0];
                     const trackRect = sliderTrack.getBoundingClientRect();
                     let newPercent = ((touch.clientX - trackRect.left) / trackRect.width) * 100;
                     newPercent = Math.max(0, Math.min(100, newPercent));
-
                     const newValue = Math.round(minAge + (newPercent / 100) * (maxAge - minAge));
-
-                    if (isMin) {
-                        if (newValue < maxValue) {
-                            minValue = newValue;
-                            thumb.setAttribute('data-value', minValue);
-                        }
-                    } else {
-                        if (newValue > minValue) {
-                            maxValue = newValue;
-                            thumb.setAttribute('data-value', maxValue);
-                        }
-                    }
-
+                    if (isMin) { if (newValue < maxValue) { minValue = newValue; thumb.setAttribute('data-value', minValue); } }
+                    else { if (newValue > minValue) { maxValue = newValue; thumb.setAttribute('data-value', maxValue); } }
                     updateRangeDisplay();
-                    filterPlayers();
-                    document.getElementById('search').value = '';
-                    document.getElementById('search-clear').style.display = 'none';
+                    scheduleFilter();
                 });
-
-                document.addEventListener('touchend', () => {
-                    isDragging = false;
-                });
+                document.addEventListener('touchend', () => { dragging = false; });
             }
 
             setupThumbDrag(thumbMin, true);
             setupThumbDrag(thumbMax, false);
+            sliderTrack.parentElement.addEventListener('click', e => handleMove(e.clientX));
+            sliderTrack.parentElement.addEventListener('touchstart', e => handleMove(e.touches[0].clientX));
             updateRangeDisplay();
         }
 
         function setupAttributeSliders() {
             const attributes = ['gk', 'df', 'mf', 'fw'];
-            const minAttr = 1;
-            const maxAttr = 28;
-
+            const minAttr = 1, maxAttr = 28;
             attributes.forEach(attr => {
                 const thumbMin = document.getElementById(`${attr}-thumb-min`);
                 const thumbMax = document.getElementById(`${attr}-thumb-max`);
@@ -1941,144 +1578,78 @@
                 const maxValueDisplay = document.getElementById(`${attr}-max-value`);
                 const sliderContainer = thumbMin.closest('.attribute-slider-container');
                 const sliderTrack = sliderContainer.querySelector('.attribute-slider-track');
-
                 let minValue = parseInt(thumbMin.getAttribute('data-value'));
                 let maxValue = parseInt(thumbMax.getAttribute('data-value'));
 
                 function updateRangeDisplay() {
                     const minPercent = ((minValue - minAttr) / (maxAttr - minAttr)) * 100;
                     const maxPercent = ((maxValue - minAttr) / (maxAttr - minAttr)) * 100;
-
                     thumbMin.style.left = `${minPercent}%`;
                     thumbMax.style.left = `${maxPercent}%`;
                     sliderRange.style.left = `${minPercent}%`;
                     sliderRange.style.width = `${maxPercent - minPercent}%`;
-
                     minValueDisplay.textContent = minValue;
                     maxValueDisplay.textContent = maxValue;
                 }
 
-                function moveThumbToPosition(e, touch = false) {
-                    const clientX = touch ? e.touches[0].clientX : e.clientX;
+                function handleMove(clientX) {
                     const trackRect = sliderTrack.getBoundingClientRect();
                     let newPercent = ((clientX - trackRect.left) / trackRect.width) * 100;
                     newPercent = Math.max(0, Math.min(100, newPercent));
                     const newValue = Math.round(minAttr + (newPercent / 100) * (maxAttr - minAttr));
-
                     const minDiff = Math.abs(newValue - minValue);
                     const maxDiff = Math.abs(newValue - maxValue);
                     if (minDiff < maxDiff) {
-                        if (newValue < maxValue) {
-                            minValue = newValue;
-                            thumbMin.setAttribute('data-value', minValue);
-                        }
+                        if (newValue < maxValue) { minValue = newValue; thumbMin.setAttribute('data-value', minValue); }
                     } else {
-                        if (newValue > minValue) {
-                            maxValue = newValue;
-                            thumbMax.setAttribute('data-value', maxValue);
-                        }
+                        if (newValue > minValue) { maxValue = newValue; thumbMax.setAttribute('data-value', maxValue); }
                     }
-
                     updateRangeDisplay();
-                    filterPlayers();
-                    document.getElementById('search').value = '';
-                    document.getElementById('search-clear').style.display = 'none';
+                    scheduleFilter();
                 }
 
-                sliderContainer.addEventListener('click', moveThumbToPosition);
-                sliderContainer.addEventListener('touchstart', (e) => {
-                    moveThumbToPosition(e, true);
-                });
-
                 function setupThumbDrag(thumb, isMin) {
-                    let isDragging = false;
-
-                    thumb.addEventListener('mousedown', (e) => {
-                        isDragging = true;
-                        e.preventDefault();
-                    });
-
-                    document.addEventListener('mousemove', (e) => {
-                        if (!isDragging) return;
-
+                    let dragging = false;
+                    thumb.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
+                    document.addEventListener('mousemove', e => {
+                        if (!dragging) return;
                         const trackRect = sliderTrack.getBoundingClientRect();
                         let newPercent = ((e.clientX - trackRect.left) / trackRect.width) * 100;
                         newPercent = Math.max(0, Math.min(100, newPercent));
-
                         const newValue = Math.round(minAttr + (newPercent / 100) * (maxAttr - minAttr));
-
-                        if (isMin) {
-                            if (newValue < maxValue) {
-                                minValue = newValue;
-                                thumb.setAttribute('data-value', minValue);
-                            }
-                        } else {
-                            if (newValue > minValue) {
-                                maxValue = newValue;
-                                thumb.setAttribute('data-value', maxValue);
-                            }
-                        }
-
+                        if (isMin) { if (newValue < maxValue) { minValue = newValue; thumb.setAttribute('data-value', minValue); } }
+                        else { if (newValue > minValue) { maxValue = newValue; thumb.setAttribute('data-value', maxValue); } }
                         updateRangeDisplay();
-                        filterPlayers();
-                        document.getElementById('search').value = '';
-                        document.getElementById('search-clear').style.display = 'none';
+                        scheduleFilter();
                     });
-
-                    document.addEventListener('mouseup', () => {
-                        isDragging = false;
-                    });
-
-                    thumb.addEventListener('touchstart', (e) => {
-                        isDragging = true;
-                        e.preventDefault();
-                    });
-
-                    document.addEventListener('touchmove', (e) => {
-                        if (!isDragging) return;
-
+                    document.addEventListener('mouseup', () => { dragging = false; });
+                    thumb.addEventListener('touchstart', e => { dragging = true; e.preventDefault(); });
+                    document.addEventListener('touchmove', e => {
+                        if (!dragging) return;
                         const touch = e.touches[0];
                         const trackRect = sliderTrack.getBoundingClientRect();
                         let newPercent = ((touch.clientX - trackRect.left) / trackRect.width) * 100;
                         newPercent = Math.max(0, Math.min(100, newPercent));
-
                         const newValue = Math.round(minAttr + (newPercent / 100) * (maxAttr - minAttr));
-
-                        if (isMin) {
-                            if (newValue < maxValue) {
-                                minValue = newValue;
-                                thumb.setAttribute('data-value', minValue);
-                            }
-                        } else {
-                            if (newValue > minValue) {
-                                maxValue = newValue;
-                                thumb.setAttribute('data-value', maxValue);
-                            }
-                        }
-
+                        if (isMin) { if (newValue < maxValue) { minValue = newValue; thumb.setAttribute('data-value', minValue); } }
+                        else { if (newValue > minValue) { maxValue = newValue; thumb.setAttribute('data-value', maxValue); } }
                         updateRangeDisplay();
-                        filterPlayers();
-                        document.getElementById('search').value = '';
-                        document.getElementById('search-clear').style.display = 'none';
+                        scheduleFilter();
                     });
-
-                    document.addEventListener('touchend', () => {
-                        isDragging = false;
-                    });
+                    document.addEventListener('touchend', () => { dragging = false; });
                 }
 
                 setupThumbDrag(thumbMin, true);
                 setupThumbDrag(thumbMax, false);
+                sliderContainer.addEventListener('click', e => handleMove(e.clientX));
+                sliderContainer.addEventListener('touchstart', e => handleMove(e.touches[0].clientX));
                 updateRangeDisplay();
             });
 
-            const expInputs = document.querySelectorAll('.experience-input');
-            expInputs.forEach(input => {
+            document.querySelectorAll('.experience-input').forEach(input => {
                 input.addEventListener('input', function(e) {
                     this.value = this.value.replace(/\D/g, '');
-                    filterPlayers();
-                    document.getElementById('search').value = '';
-                    document.getElementById('search-clear').style.display = 'none';
+                    scheduleFilter();
                 });
             });
         }
@@ -2089,11 +1660,10 @@
             document.getElementById('team-select').value = '';
             document.getElementById('nationality-select').value = '';
             document.getElementById('value-select').value = '';
+            document.getElementById('goals-filter').value = '';
+            document.getElementById('assists-filter').value = '';
             document.getElementById('position-all').checked = true;
-            document.getElementById('position-gk').checked = false;
-            document.getElementById('position-df').checked = false;
-            document.getElementById('position-mf').checked = false;
-            document.getElementById('position-fw').checked = false;
+            document.getElementById('position-gk').checked = document.getElementById('position-df').checked = document.getElementById('position-mf').checked = document.getElementById('position-fw').checked = false;
             document.getElementById('thumb-min').setAttribute('data-value', '16');
             document.getElementById('thumb-max').setAttribute('data-value', '40');
             document.getElementById('gk-thumb-min').setAttribute('data-value', '1');
@@ -2108,491 +1678,104 @@
             document.getElementById('df-experience').value = '';
             document.getElementById('mf-experience').value = '';
             document.getElementById('fw-experience').value = '';
-
             filterPlayers();
             setupAgeSlider();
             setupAttributeSliders();
         }
 
         function showPlayerStats(player) {
-            const attrs = [parseInt(player.St) || 0, parseInt(player.Tk) || 0, parseInt(player.Ps) || 0, parseInt(player
-            .Sh) || 0];
+            const attrs = [parseInt(player.St)||0, parseInt(player.Tk)||0, parseInt(player.Ps)||0, parseInt(player.Sh)||0];
             const maxAttr = Math.max(...attrs);
             let stars = '';
-            if (maxAttr >= 21) {
-                stars = '★★★★★';
-            } else if (maxAttr >= 19) {
-                stars = '★★★★';
-            } else if (maxAttr === 18) {
-                stars = '★★★';
-            } else if (maxAttr >= 16) {
-                stars = '★★';
-            } else if (maxAttr >= 14) {
-                stars = '★';
-            }
+            if (maxAttr >= 21) stars = '★★★★★';
+            else if (maxAttr >= 19) stars = '★★★★';
+            else if (maxAttr === 18) stars = '★★★';
+            else if (maxAttr >= 16) stars = '★★';
+            else if (maxAttr >= 14) stars = '★';
             const starSpan = `<span style="color: gold; margin-left: 5px;">${stars}</span>`;
-
             let tableContent = '';
             const positions = player.positions;
             if (positions.includes('GK')) {
-                tableContent = `
-                    <tr>
-                        <td>${player.Gam}</td>
-                        <td>${player.Con}</td>
-                        <td>${player.Sav}</td>
-                        <td>${player.Mom}</td>
-                    </tr>
-                `;
+                tableContent = `<tr><td>${formatNumber(player.Gam)}</td><td>${formatNumber(player.Con)}</td><td>${formatNumber(player.Sav)}</td><td>${formatNumber(player.Mom)}</td></tr>`;
             } else {
-                tableContent = `
-                    <tr>
-                        <td>${player.Gam}</td>
-                        <td>${player.Gls}</td>
-                        <td>${player.Ass}</td>
-                        <td>${player.Mom}</td>
-                    </tr>
-                `;
+                tableContent = `<tr><td>${formatNumber(player.Gam)}</td><td>${formatNumber(player.Gls)}</td><td>${formatNumber(player.Ass)}</td><td>${formatNumber(player.Mom)}</td></tr>`;
             }
-
             let tableHeaders = '<tr><th title="Partidos jugados">PJ</th>';
-            if (positions.includes('GK')) {
-                tableHeaders += '<th title="Goles encajados">GE</th><th title="Paradas">Par</th>';
-            } else {
-                tableHeaders += '<th title="Goles marcados">Gls</th><th title="Asistencias">Asi</th>';
-            }
+            if (positions.includes('GK')) tableHeaders += '<th title="Goles encajados">GE</th><th title="Paradas">Par</th>';
+            else tableHeaders += '<th title="Goles marcados">Gls</th><th title="Asistencias">Asi</th>';
             tableHeaders += '<th title="MVP del partido">MVP</th></tr>';
 
-            let lowerStats = '';
-            const min = parseInt(player.Min) || 0;
-            lowerStats += `
-                <p><strong>Minutos jugados:</strong> ${player.Min}</p>
-                <p><strong>Sustituciones:</strong> ${player.Sub}</p>
-            `;
+            let lowerStats = `<p><strong>Minutos jugados:</strong> ${formatNumber(player.Min)}</p><p><strong>Sustituciones:</strong> ${formatNumber(player.Sub)}</p>`;
             if (positions.includes('GK')) {
-                const con = parseInt(player.Con) || 0;
-                const ratioCon = con > 0 ? Math.round(min / con) : 'N/A';
-                lowerStats += `
-                    <p><strong>Ratio minutos por gol encajado:</strong> ${ratioCon}</p>
-                `;
+                const con = parseInt(player.Con)||0;
+                const ratioCon = con > 0 ? Math.round(parseInt(player.Min) / con) : 'N/A';
+                lowerStats += `<p><strong>Ratio minutos por gol encajado:</strong> ${formatNumber(ratioCon)}</p>`;
             } else {
-                const gls = parseInt(player.Gls) || 0;
-                const ratioGls = gls > 0 ? Math.round(min / gls) : 'N/A';
-                lowerStats += `
-                    <p><strong>Ratio minutos por gol:</strong> ${ratioGls}</p>
-                `;
+                const gls = parseInt(player.Gls)||0;
+                const ratioGls = gls > 0 ? Math.round(parseInt(player.Min) / gls) : 'N/A';
+                lowerStats += `<p><strong>Ratio minutos por gol:</strong> ${formatNumber(ratioGls)}</p>`;
             }
 
             document.getElementById('modalBody').innerHTML = `
                 <h2>${formatPlayerName(player.Name)}${starSpan}</h2>
-                <table>
-                    ${tableHeaders}
-                    ${tableContent}
-                </table>
-                <div class="stats-grid">
-                    ${lowerStats}
-                </div>
+                <table>${tableHeaders}${tableContent}</table>
+                <div class="stats-grid">${lowerStats}</div>
             `;
             document.getElementById('myModal').style.display = 'flex';
         }
 
         function showTeamSquad(team, season = currentSeason) {
-            let teamPlayers = [];
-            if (seasonData[season]) {
-                teamPlayers = seasonData[season].filter(p => p.team === team);
-            } else {
-                teamPlayers = players.filter(p => p.team === team);
-            }
-
-            let totalValue = 0;
-            let totalSalary = 0;
-            let totalAge = 0;
+            let teamPlayers = seasonData[season] ? seasonData[season].filter(p => p.team === team) : players.filter(p => p.team === team);
+            let totalValue = 0, totalSalary = 0, totalAge = 0;
             teamPlayers.forEach(p => {
                 totalValue += p.value;
                 totalSalary += p.salary;
-                totalAge += parseInt(p.Age) || 0;
+                totalAge += parseInt(p.Age)||0;
             });
             const avgAge = teamPlayers.length > 0 ? (totalAge / teamPlayers.length).toFixed(1).replace('.', ',') : '0';
             let squadList = '';
             teamPlayers.forEach(p => {
                 const flagCode = p.Nat.toLowerCase();
                 const flagUrl = flags[flagCode] || '';
-                const inj = parseInt(p.Inj) || 0;
-                const sus = parseInt(p.Sus) || 0;
+                const inj = parseInt(p.Inj)||0, sus = parseInt(p.Sus)||0;
                 let status = '';
-                if (inj > 0) {
-                    const partidoText = inj === 1 ? 'partido' : 'partidos';
-                    status +=
-                        `<span class="status-tag" title="Lesionado por ${inj} ${partidoText}">LES</span>`;
-                }
-                if (sus > 0) {
-                    const partidoText = sus === 1 ? 'partido' : 'partidos';
-                    status +=
-                        `<span class="status-tag" title="Sancionado por ${sus} ${partidoText}">SAN</span>`;
-                }
-                const attributes = {
-                    'St': parseInt(p.St) || 0,
-                    'Tk': parseInt(p.Tk) || 0,
-                    'Ps': parseInt(p.Ps) || 0,
-                    'Sh': parseInt(p.Sh) || 0
-                };
+                if (inj > 0) status += `<span class="status-tag" title="Lesionado por ${inj} ${inj===1?'partido':'partidos'}">LES</span>`;
+                if (sus > 0) status += `<span class="status-tag" title="Sancionado por ${sus} ${sus===1?'partido':'partidos'}">SAN</span>`;
+                const attributes = {'St':parseInt(p.St)||0,'Tk':parseInt(p.Tk)||0,'Ps':parseInt(p.Ps)||0,'Sh':parseInt(p.Sh)||0};
                 const maxValue = Math.max(...Object.values(attributes));
-                const highestAttributes = Object.keys(attributes).filter(attr => attributes[attr] ===
-                    maxValue);
-                const attrHtml =
-                    `<span class="${highestAttributes.includes('St') ? 'highlight' : ''}">${p.St}</span> <span class="${highestAttributes.includes('Tk') ? 'highlight' : ''}">${p.Tk}</span> <span class="${highestAttributes.includes('Ps') ? 'highlight' : ''}">${p.Ps}</span> <span class="${highestAttributes.includes('Sh') ? 'highlight' : ''}">${p.Sh}</span>`;
-                squadList += `
-                    <tr>
-                        <td>
-                            ${flagUrl ? `<img src="${flagUrl}" alt="${p.Nat} flag" style="width: 20px; height: 15px; margin-right: 5px;" onerror="this.style.display='none'" />` : ''}
-                            <strong>${formatPlayerName(p.Name)}</strong>${status}
-                        </td>
-                        <td>${p.Age}</td>
-                        <td>${attrHtml}</td>
-                        <td>${p.KAb} ${p.TAb} ${p.PAb} ${p.SAb}</td>
-                    </tr>
-                `;
+                const highestAttributes = Object.keys(attributes).filter(attr => attributes[attr] === maxValue);
+                const attrHtml = `<span class="${highestAttributes.includes('St')?'highlight':''}">${p.St}</span> <span class="${highestAttributes.includes('Tk')?'highlight':''}">${p.Tk}</span> <span class="${highestAttributes.includes('Ps')?'highlight':''}">${p.Ps}</span> <span class="${highestAttributes.includes('Sh')?'highlight':''}">${p.Sh}</span>`;
+                squadList += `<tr><td>${flagUrl?`<img src="${flagUrl}" alt="${p.Nat} flag" style="width:20px;height:15px;margin-right:5px;" onerror="this.style.display='none'"/>`:''}<strong>${formatPlayerName(p.Name)}</strong>${status}</td><td>${p.Age}</td><td>${attrHtml}</td><td>${formatNumber(p.KAb)} ${formatNumber(p.TAb)} ${formatNumber(p.PAb)} ${formatNumber(p.SAb)}</td></tr>`;
             });
             const badgeUrl = badges[team.toLowerCase()] || '';
             const stadiumUrl = stadia[team.toLowerCase()] || '';
-
             const seasonOptions = `
                 <select class="modal-season-select" id="modal-season-select">
-                    <option value="37-mid" ${season === '37-mid' ? 'selected' : ''}>Temporada 37 - Intermedio</option>
-                    <option value="37-start" ${season === '37-start' ? 'selected' : ''}>Temporada 37 - Inicio</option>
-                    <option value="36" ${season === '36' ? 'selected' : ''}>Temporada 36 - Final</option>
-                    <option value="36-start" ${season === '36-start' ? 'selected' : ''}>Temporada 36 - Inicio</option>
-                </select>
-            `;
-
+                    <option value="37-mid" ${season==='37-mid'?'selected':''}>Temp. 37 - Intermedio</option>
+                    <option value="37-start" ${season==='37-start'?'selected':''}>Temp. 37 - Inicio</option>
+                    <option value="36" ${season==='36'?'selected':''}>Temp. 36 - Final</option>
+                    <option value="36-start" ${season==='36-start'?'selected':''}>Temp. 36 - Inicio</option>
+                </select>`;
             document.getElementById('modalBody').innerHTML = `
                 <div class="team-header">
                     <img class="team-badge" src="${badgeUrl}" alt="${team} badge" onerror="this.style.display='none'" />
                     <h2>${team}</h2>
                     ${seasonOptions}
-                    <img src="${stadiumUrl}" alt="${team} stadium" style="width: 300px; height: 120px;" onerror="this.style.display='none'" />
+                    <img src="${stadiumUrl}" alt="${team} stadium" style="width:300px;height:120px;" onerror="this.style.display='none'" />
                 </div>
                 <div class="team-stats">
-                    <p><span title="Total jugadores">👥</span> Total jugadores: ${teamPlayers.length}</p>
+                    <p><span title="Total jugadores">👥</span> Total jugadores: ${formatNumber(teamPlayers.length)}</p>
                     <p><span title="Edad media">📅</span> Edad media: ${avgAge}</p>
-                    <p><span title="Valor total">💰</span> Valor total: ${totalValue.toFixed(2).replace('.', ',')}M</p>
-                    <p><span title="Masa salarial">💵</span> Masa salarial: ${totalSalary.toFixed(2).replace('.', ',')}M</p>
+                    <p><span title="Valor total">💰</span> Valor total: ${formatNumber(totalValue.toFixed(2).replace('.',','))}M</p>
+                    <p><span title="Masa salarial">💵</span> Masa salarial: ${formatNumber(totalSalary.toFixed(2).replace('.',','))}M</p>
                 </div>
-                <table class="squad-table">
-                    <tr>
-                        <th>Jugador</th>
-                        <th>Edad</th>
-                        <th>Atributos</th>
-                        <th>Experiencia</th>
-                    </tr>
-                    ${squadList}
-                </table>
-            `;
-
+                <table class="squad-table"><tr><th>Jugador</th><th>Edad</th><th>Atributos</th><th>Experiencia</th></tr>${squadList}</table>`;
             document.getElementById('modal-season-select').addEventListener('change', async function(e) {
                 const newSeason = e.target.value;
-                if (!seasonData[newSeason]) {
-                    await loadData(newSeason, true);
-                }
+                if (!seasonData[newSeason]) await loadData(newSeason, true);
                 showTeamSquad(team, newSeason);
             });
-
             document.getElementById('myModal').style.display = 'flex';
-        }
-
-        async function loadCurrentSeason() {
-            const plantillasDropbox = {
-                'Ajax': 'https://www.dropbox.com/scl/fi/9njb84ywzym3hhx5i2lg5/ajx.txt?rlkey=jhym2pqc9m60sioha0mmcil0o&e=1&dl=1',
-                'Arsenal': 'https://www.dropbox.com/scl/fi/wb6juf6y612xx28zrvu26/ars.txt?rlkey=6qe12dx31wj93kphgz5dh6qlz&e=1&dl=1',
-                'Aston Villa': 'https://www.dropbox.com/scl/fi/ucubvl04pfvqkev518dyo/asv.txt?rlkey=ubr83xqdq2v5r2g9twadabnib&e=1&st=com1va32&dl=1',
-                'Atalanta': 'https://www.dropbox.com/scl/fi/9w70qz8otcgwf57h25y07/ata.txt?rlkey=ussk413mrxz8iwe4d9tg7ls9i&e=1&st=u4t1vyqv&dl=1',
-                'Atlético de Madrid': 'https://www.dropbox.com/scl/fi/tuhsywhyfywslnig6j5ar/atm.txt?rlkey=wg64adwz2y5eurb20m20201kr&e=1&dl=1',
-                'Barcelona': 'https://www.dropbox.com/scl/fi/b2a0fyv07x3esuxpr1280/fcb.txt?rlkey=gjc2quuw368lwzf091a4tf89t&e=1&dl=1',
-                'Bayer Leverkusen': 'https://www.dropbox.com/scl/fi/egj2qgnrkjtt7jlxuhrx0/ble.txt?rlkey=9qodoqwtvzaklfh2t96rykp9i&e=1&st=2jg7bb7k&dl=1',
-                'Bayern de Múnich': 'https://www.dropbox.com/scl/fi/bq95u9q42jdhd156bw2dk/bay.txt?rlkey=9h8b1beoe8dimr9ryk1rd1mva&e=1&dl=1',
-                'Borussia Dortmund': 'https://www.dropbox.com/scl/fi/6olskieubqse5hr31t6sz/bdo.txt?rlkey=wdgovvbf2npezjgjjul1101kt&e=1&dl=1',
-                'Chelsea': 'https://www.dropbox.com/scl/fi/vaib05ni6t82hyrt5rg9v/che.txt?rlkey=fiv3v4p18gh9vc0ztma3v8pnv&e=1&dl=1',
-                'Inter de Milán': 'https://www.dropbox.com/scl/fi/6hxb2kmntadzmqcm14zg9/int.txt?rlkey=y0gisxpu2fnixut8h3haxcydc&e=1&dl=1',
-                'Juventus': 'https://www.dropbox.com/scl/fi/x9ysiu5eyrpkdaf1pfjpe/juv.txt?rlkey=jxocqh225uco9o2lx54mvtz61&e=1&dl=1',
-                'Liverpool': 'https://www.dropbox.com/scl/fi/hz76l1lkyqvuuns4hrreo/liv.txt?rlkey=3afux4q929md83z041di2coxe&e=1&dl=1',
-                'Manchester City': 'https://www.dropbox.com/scl/fi/wcq9i1o9bxppwbyu3ggv4/mci.txt?rlkey=kwxrxndbhcxisdf5339ldef1k&e=1&dl=1',
-                'Manchester United': 'https://www.dropbox.com/scl/fi/2j17u24ig5s5hzbvg0zkp/man.txt?rlkey=9cs3sj1debd0cbw3mxkizrzfz&e=1&dl=1',
-                'Milan': 'https://www.dropbox.com/scl/fi/klb7hcy0epivuvkmio8o2/mil.txt?rlkey=7plny75gkdl22tkkg8wkvmo1s&e=1&dl=1',
-                'Nápoles': 'https://www.dropbox.com/scl/fi/zpou5oz6iv51u21helwdg/nap.txt?rlkey=gjekp32w79pxwtegk1s3oei06&e=1&dl=1',
-                'Newcastle United': 'https://www.dropbox.com/scl/fi/46m0eyfru9g97ch8c4ryy/new.txt?rlkey=zbbt3pe37i2bocxh946sz1axf&e=1&st=bk9c4sji&dl=1',
-                'PSG': 'https://www.dropbox.com/scl/fi/k2f61aq73xmm9eknqc0pm/psg.txt?rlkey=syd3nsi8zj826ysxx70ldtbur&e=1&dl=1',
-                'RB Leipzig': 'https://www.dropbox.com/scl/fi/8ick97tco5apa2rgg01uv/rbl.txt?rlkey=kn17krqcqhyefeydngn2c3yqj&e=1&dl=1',
-                'Real Madrid': 'https://www.dropbox.com/scl/fi/2xida739oitrf4gilso4v/rma.txt?rlkey=ybjbuajy747quooqkzt5rsai3&e=1&dl=1',
-                'Sevilla': 'https://www.dropbox.com/scl/fi/n64w9h04e2f8h0tflt1kg/sev.txt?rlkey=z72w5eyq9vacdgr8655yzmthq&e=1&dl=1',
-                'Tottenham Hotspur': 'https://www.dropbox.com/scl/fi/ldj3rdbrip4466xdvu54e/tot.txt?rlkey=fpj5emqz2bwxue6si2p5slkci&e=1&dl=1',
-                'Villarreal': 'https://www.dropbox.com/scl/fi/bo2rw6u9sndoel5hzfcmn/vil.txt?rlkey=kz37s2mwg71cgls3903skid2p&e=1&dl=1'
-            };
-
-            const newPlayers = [];
-            const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=';
-
-            const promesas = Object.entries(plantillasDropbox).map(async ([nombreEquipo, url]) => {
-                try {
-                    const response = await fetch(proxyUrl + encodeURIComponent(url));
-                    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-                    const text = await response.text();
-                    const lineas = text.split('\n').filter(linea => linea.trim() && !linea.startsWith(
-                        '*'));
-                    lineas.forEach(linea => {
-                        if (linea.includes('Name') && linea.includes('Age') && linea.includes(
-                                'St') && linea.includes('Tk') && linea.includes('Ps') && linea
-                            .includes('Sh') && linea.includes('KAb') && linea.includes('TAb') &&
-                            linea.includes('PAb') && linea.includes('SAb')) {
-                            return;
-                        }
-                        const partes = linea.trim().split(/\s+/);
-                        if (partes.length === 27) {
-                            const playerData = {};
-                            headerFields.forEach((field, idx) => {
-                                playerData[field] = partes[idx];
-                            });
-                            playerData.team = nombreEquipo;
-                            playerData.value = calculatePlayerValue(playerData);
-                            playerData.salary = calculateSalary(playerData);
-                            playerData.positions = getPlayerPosition(playerData);
-                            newPlayers.push(playerData);
-                        }
-                    });
-                    console.log(`Plantilla ${nombreEquipo} cargada correctamente`);
-                } catch (error) {
-                    console.error(`Error cargando ${nombreEquipo}:`, error);
-                }
-            });
-
-            await Promise.allSettled(promesas);
-            return newPlayers;
-        }
-
-        async function loadSeason36() {
-            const url = 'https://www.tusoccermanager.com/h124-playerdbseason36-2-html';
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-            const html = await response.text();
-
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const preElement = doc.querySelector('pre');
-            if (!preElement) throw new Error('No se encontró la etiqueta <pre> en la página');
-
-            const text = preElement.textContent;
-            const lines = text.split('\n');
-
-            let firstHeaderIndex = -1;
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i].trim().startsWith('Name')) {
-                    firstHeaderIndex = i;
-                    break;
-                }
-            }
-            if (firstHeaderIndex === -1) throw new Error('No se encontró la cabecera de jugadores');
-
-            const teamNames = [];
-            for (let i = 0; i < firstHeaderIndex; i++) {
-                const line = lines[i].trim();
-                if (line) teamNames.push(line);
-            }
-
-            const headerIndices = [];
-            for (let i = firstHeaderIndex; i < lines.length; i++) {
-                if (lines[i].trim().startsWith('Name')) {
-                    headerIndices.push(i);
-                }
-            }
-
-            if (headerIndices.length !== teamNames.length) {
-                console.warn(
-                    `Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`
-                    );
-            }
-
-            const newPlayers = [];
-            const numBlocks = Math.min(headerIndices.length, teamNames.length);
-
-            for (let b = 0; b < numBlocks; b++) {
-                const startIdx = headerIndices[b] + 2;
-                const endIdx = (b < numBlocks - 1) ? headerIndices[b + 1] : lines.length;
-                const team = teamNames[b];
-
-                for (let i = startIdx; i < endIdx; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes(
-                            'Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line
-                        .includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
-                        continue;
-                    }
-                    const partes = line.split(/\s+/);
-                    if (partes.length === 27) {
-                        const playerData = {};
-                        headerFields.forEach((field, idx) => {
-                            playerData[field] = partes[idx];
-                        });
-                        playerData.team = team;
-                        playerData.value = calculatePlayerValue(playerData);
-                        playerData.salary = calculateSalary(playerData);
-                        playerData.positions = getPlayerPosition(playerData);
-                        newPlayers.push(playerData);
-                    }
-                }
-            }
-
-            return newPlayers;
-        }
-
-        async function loadSeason36Start() {
-            const url = 'https://www.tusoccermanager.com/h129-playerdbseason36-1-html';
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-            const html = await response.text();
-
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const preElement = doc.querySelector('pre');
-            if (!preElement) throw new Error('No se encontró la etiqueta <pre> en la página');
-
-            const text = preElement.textContent;
-            const lines = text.split('\n');
-
-            let firstHeaderIndex = -1;
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i].trim().startsWith('Name')) {
-                    firstHeaderIndex = i;
-                    break;
-                }
-            }
-            if (firstHeaderIndex === -1) throw new Error('No se encontró la cabecera de jugadores');
-
-            const teamNames = [];
-            for (let i = 0; i < firstHeaderIndex; i++) {
-                const line = lines[i].trim();
-                if (line) teamNames.push(line);
-            }
-
-            const headerIndices = [];
-            for (let i = firstHeaderIndex; i < lines.length; i++) {
-                if (lines[i].trim().startsWith('Name')) {
-                    headerIndices.push(i);
-                }
-            }
-
-            if (headerIndices.length !== teamNames.length) {
-                console.warn(
-                    `Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`
-                    );
-            }
-
-            const newPlayers = [];
-            const numBlocks = Math.min(headerIndices.length, teamNames.length);
-
-            for (let b = 0; b < numBlocks; b++) {
-                const startIdx = headerIndices[b] + 2;
-                const endIdx = (b < numBlocks - 1) ? headerIndices[b + 1] : lines.length;
-                const team = teamNames[b];
-
-                for (let i = startIdx; i < endIdx; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes(
-                            'Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line
-                        .includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
-                        continue;
-                    }
-                    const partes = line.split(/\s+/);
-                    if (partes.length === 27) {
-                        const playerData = {};
-                        headerFields.forEach((field, idx) => {
-                            playerData[field] = partes[idx];
-                        });
-                        playerData.team = team;
-                        playerData.value = calculatePlayerValue(playerData);
-                        playerData.salary = calculateSalary(playerData);
-                        playerData.positions = getPlayerPosition(playerData);
-                        newPlayers.push(playerData);
-                    }
-                }
-            }
-
-            return newPlayers;
-        }
-
-        async function loadSeason37Start() {
-            const url = 'https://www.tusoccermanager.com/h131-playerdbseason37-1-html';
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-            const html = await response.text();
-
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const preElement = doc.querySelector('pre');
-            if (!preElement) throw new Error('No se encontró la etiqueta <pre> en la página');
-
-            const text = preElement.textContent;
-            const lines = text.split('\n');
-
-            let firstHeaderIndex = -1;
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i].trim().startsWith('Name')) {
-                    firstHeaderIndex = i;
-                    break;
-                }
-            }
-            if (firstHeaderIndex === -1) throw new Error('No se encontró la cabecera de jugadores');
-
-            const teamNames = [];
-            for (let i = 0; i < firstHeaderIndex; i++) {
-                const line = lines[i].trim();
-                if (line) teamNames.push(line);
-            }
-
-            const headerIndices = [];
-            for (let i = firstHeaderIndex; i < lines.length; i++) {
-                if (lines[i].trim().startsWith('Name')) {
-                    headerIndices.push(i);
-                }
-            }
-
-            if (headerIndices.length !== teamNames.length) {
-                console.warn(
-                    `Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`
-                    );
-            }
-
-            const newPlayers = [];
-            const numBlocks = Math.min(headerIndices.length, teamNames.length);
-
-            for (let b = 0; b < numBlocks; b++) {
-                const startIdx = headerIndices[b] + 2;
-                const endIdx = (b < numBlocks - 1) ? headerIndices[b + 1] : lines.length;
-                const team = teamNames[b];
-
-                for (let i = startIdx; i < endIdx; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes(
-                            'Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line
-                        .includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
-                        continue;
-                    }
-                    const partes = line.split(/\s+/);
-                    if (partes.length === 27) {
-                        const playerData = {};
-                        headerFields.forEach((field, idx) => {
-                            playerData[field] = partes[idx];
-                        });
-                        playerData.team = team;
-                        playerData.value = calculatePlayerValue(playerData);
-                        playerData.salary = calculateSalary(playerData);
-                        playerData.positions = getPlayerPosition(playerData);
-                        newPlayers.push(playerData);
-                    }
-                }
-            }
-
-            return newPlayers;
         }
 
         async function loadSeason37Mid() {
@@ -2600,65 +1783,37 @@
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
             const html = await response.text();
-
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             const preElement = doc.querySelector('pre');
-            if (!preElement) throw new Error('No se encontró la etiqueta <pre> en la página');
-
+            if (!preElement) throw new Error('No se encontró la etiqueta <pre>');
             const text = preElement.textContent;
             const lines = text.split('\n');
-
+            const dateRegex = /(\d{2}\/\d{2}\/\d{4})/;
+            for (let i = lines.length - 1; i >= 0; i--) {
+                const match = lines[i].match(dateRegex);
+                if (match) { lastUpdateDate = match[0]; break; }
+            }
             let firstHeaderIndex = -1;
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i].trim().startsWith('Name')) {
-                    firstHeaderIndex = i;
-                    break;
-                }
-            }
+            for (let i = 0; i < lines.length; i++) { if (lines[i].trim().startsWith('Name')) { firstHeaderIndex = i; break; } }
             if (firstHeaderIndex === -1) throw new Error('No se encontró la cabecera de jugadores');
-
             const teamNames = [];
-            for (let i = 0; i < firstHeaderIndex; i++) {
-                const line = lines[i].trim();
-                if (line) teamNames.push(line);
-            }
-
+            for (let i = 0; i < firstHeaderIndex; i++) { const line = lines[i].trim(); if (line) teamNames.push(line); }
             const headerIndices = [];
-            for (let i = firstHeaderIndex; i < lines.length; i++) {
-                if (lines[i].trim().startsWith('Name')) {
-                    headerIndices.push(i);
-                }
-            }
-
-            if (headerIndices.length !== teamNames.length) {
-                console.warn(
-                    `Número de bloques (${headerIndices.length}) diferente al número de equipos (${teamNames.length}). Se usará el mínimo.`
-                    );
-            }
-
+            for (let i = firstHeaderIndex; i < lines.length; i++) { if (lines[i].trim().startsWith('Name')) headerIndices.push(i); }
             const newPlayers = [];
             const numBlocks = Math.min(headerIndices.length, teamNames.length);
-
             for (let b = 0; b < numBlocks; b++) {
                 const startIdx = headerIndices[b] + 2;
                 const endIdx = (b < numBlocks - 1) ? headerIndices[b + 1] : lines.length;
                 const team = teamNames[b];
-
                 for (let i = startIdx; i < endIdx; i++) {
                     const line = lines[i].trim();
-                    if (!line) continue;
-                    if (line.includes('Name') && line.includes('Age') && line.includes('St') && line.includes(
-                            'Tk') && line.includes('Ps') && line.includes('Sh') && line.includes('KAb') && line
-                        .includes('TAb') && line.includes('PAb') && line.includes('SAb')) {
-                        continue;
-                    }
+                    if (!line || (line.includes('Name') && line.includes('Age') && line.includes('St'))) continue;
                     const partes = line.split(/\s+/);
                     if (partes.length === 27) {
                         const playerData = {};
-                        headerFields.forEach((field, idx) => {
-                            playerData[field] = partes[idx];
-                        });
+                        headerFields.forEach((field, idx) => { playerData[field] = partes[idx]; });
                         playerData.team = team;
                         playerData.value = calculatePlayerValue(playerData);
                         playerData.salary = calculateSalary(playerData);
@@ -2667,7 +1822,86 @@
                     }
                 }
             }
+            return newPlayers;
+        }
 
+        async function loadSeason37Start() {
+            const url = 'https://www.tusoccermanager.com/h131-playerdbseason37-1-html';
+            const response = await fetch(url); if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+            const html = await response.text();
+            const parser = new DOMParser(); const doc = parser.parseFromString(html, 'text/html');
+            const preElement = doc.querySelector('pre'); if (!preElement) throw new Error('No se encontró <pre>');
+            const text = preElement.textContent; const lines = text.split('\n');
+            const dateRegex = /(\d{2}\/\d{2}\/\d{4})/;
+            for (let i = lines.length - 1; i >= 0; i--) { const match = lines[i].match(dateRegex); if (match) { lastUpdateDate = match[0]; break; } }
+            let firstHeaderIndex = -1; for (let i = 0; i < lines.length; i++) { if (lines[i].trim().startsWith('Name')) { firstHeaderIndex = i; break; } }
+            if (firstHeaderIndex === -1) throw new Error('No se encontró la cabecera');
+            const teamNames = []; for (let i = 0; i < firstHeaderIndex; i++) { const line = lines[i].trim(); if (line) teamNames.push(line); }
+            const headerIndices = []; for (let i = firstHeaderIndex; i < lines.length; i++) { if (lines[i].trim().startsWith('Name')) headerIndices.push(i); }
+            const newPlayers = []; const numBlocks = Math.min(headerIndices.length, teamNames.length);
+            for (let b = 0; b < numBlocks; b++) {
+                const startIdx = headerIndices[b] + 2; const endIdx = (b < numBlocks - 1) ? headerIndices[b + 1] : lines.length;
+                const team = teamNames[b];
+                for (let i = startIdx; i < endIdx; i++) {
+                    const line = lines[i].trim(); if (!line || (line.includes('Name') && line.includes('Age'))) continue;
+                    const partes = line.split(/\s+/); if (partes.length === 27) {
+                        const playerData = {}; headerFields.forEach((f,idx) => { playerData[f] = partes[idx]; });
+                        playerData.team = team; playerData.value = calculatePlayerValue(playerData); playerData.salary = calculateSalary(playerData); playerData.positions = getPlayerPosition(playerData); newPlayers.push(playerData);
+                    }
+                }
+            }
+            return newPlayers;
+        }
+
+        async function loadSeason36() {
+            const url = 'https://www.tusoccermanager.com/h124-playerdbseason36-2-html';
+            const response = await fetch(url); if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+            const html = await response.text(); const parser = new DOMParser(); const doc = parser.parseFromString(html, 'text/html');
+            const preElement = doc.querySelector('pre'); if (!preElement) throw new Error('No se encontró <pre>');
+            const text = preElement.textContent; const lines = text.split('\n');
+            const dateRegex = /(\d{2}\/\d{2}\/\d{4})/; for (let i = lines.length-1; i>=0; i--) { const m = lines[i].match(dateRegex); if (m) { lastUpdateDate = m[0]; break; } }
+            let firstHeaderIndex = -1; for (let i=0;i<lines.length;i++) { if (lines[i].trim().startsWith('Name')) { firstHeaderIndex=i; break; } }
+            if (firstHeaderIndex===-1) throw new Error('No cabecera');
+            const teamNames = []; for (let i=0;i<firstHeaderIndex;i++) { const l=lines[i].trim(); if(l) teamNames.push(l); }
+            const headerIndices = []; for (let i=firstHeaderIndex;i<lines.length;i++) { if(lines[i].trim().startsWith('Name')) headerIndices.push(i); }
+            const newPlayers=[]; const numBlocks=Math.min(headerIndices.length,teamNames.length);
+            for (let b=0;b<numBlocks;b++) {
+                const startIdx=headerIndices[b]+2; const endIdx=(b<numBlocks-1)?headerIndices[b+1]:lines.length;
+                const team=teamNames[b];
+                for (let i=startIdx;i<endIdx;i++) {
+                    const line=lines[i].trim(); if(!line||(line.includes('Name')&&line.includes('Age'))) continue;
+                    const partes=line.split(/\s+/); if(partes.length===27){
+                        const pd={}; headerFields.forEach((f,idx)=>{pd[f]=partes[idx];});
+                        pd.team=team; pd.value=calculatePlayerValue(pd); pd.salary=calculateSalary(pd); pd.positions=getPlayerPosition(pd); newPlayers.push(pd);
+                    }
+                }
+            }
+            return newPlayers;
+        }
+
+        async function loadSeason36Start() {
+            const url = 'https://www.tusoccermanager.com/h129-playerdbseason36-1-html';
+            const response = await fetch(url); if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+            const html = await response.text(); const parser = new DOMParser(); const doc = parser.parseFromString(html, 'text/html');
+            const preElement = doc.querySelector('pre'); if (!preElement) throw new Error('No <pre>');
+            const text = preElement.textContent; const lines = text.split('\n');
+            const dateRegex = /(\d{2}\/\d{2}\/\d{4})/; for (let i=lines.length-1;i>=0;i--) { const m=lines[i].match(dateRegex); if(m){lastUpdateDate=m[0];break;} }
+            let firstHeaderIndex=-1; for(let i=0;i<lines.length;i++){if(lines[i].trim().startsWith('Name')){firstHeaderIndex=i;break;}}
+            if(firstHeaderIndex===-1) throw new Error('No cabecera');
+            const teamNames=[]; for(let i=0;i<firstHeaderIndex;i++){const l=lines[i].trim(); if(l) teamNames.push(l);}
+            const headerIndices=[]; for(let i=firstHeaderIndex;i<lines.length;i++){if(lines[i].trim().startsWith('Name')) headerIndices.push(i);}
+            const newPlayers=[]; const numBlocks=Math.min(headerIndices.length,teamNames.length);
+            for(let b=0;b<numBlocks;b++){
+                const startIdx=headerIndices[b]+2; const endIdx=(b<numBlocks-1)?headerIndices[b+1]:lines.length;
+                const team=teamNames[b];
+                for(let i=startIdx;i<endIdx;i++){
+                    const line=lines[i].trim(); if(!line||(line.includes('Name')&&line.includes('Age'))) continue;
+                    const partes=line.split(/\s+/); if(partes.length===27){
+                        const pd={}; headerFields.forEach((f,idx)=>{pd[f]=partes[idx];});
+                        pd.team=team; pd.value=calculatePlayerValue(pd); pd.salary=calculateSalary(pd); pd.positions=getPlayerPosition(pd); newPlayers.push(pd);
+                    }
+                }
+            }
             return newPlayers;
         }
 
@@ -2676,78 +1910,33 @@
                 document.getElementById('loading').style.display = 'block';
                 document.getElementById('results').style.display = 'none';
             }
-
             if (seasonData[season]) {
                 players = seasonData[season];
                 if (!silent) {
                     teams = [...new Set(players.map(p => p.team))].sort();
-
                     const teamSelect = document.getElementById('team-select');
                     teamSelect.innerHTML = '<option value="">Todos los equipos</option>';
-                    teams.forEach(team => {
-                        const option = document.createElement('option');
-                        option.value = team;
-                        option.textContent = team;
-                        teamSelect.appendChild(option);
-                    });
-
-                    const tempSpan = document.createElement('span');
-                    tempSpan.style.visibility = 'hidden';
-                    tempSpan.style.position = 'absolute';
-                    tempSpan.style.whiteSpace = 'nowrap';
-                    tempSpan.style.fontSize = '14px';
-                    tempSpan.style.padding = '10px';
-                    document.body.appendChild(tempSpan);
-
-                    let maxWidth = 0;
-                    Array.from(teamSelect.options).forEach(option => {
-                        tempSpan.textContent = option.textContent;
-                        maxWidth = Math.max(maxWidth, tempSpan.offsetWidth);
-                    });
-                    document.body.removeChild(tempSpan);
-                    teamSelect.style.width = `${maxWidth + 30}px`;
-
-                    nationalities = [...new Set(players.map(player => player.Nat.toUpperCase()))].sort();
+                    teams.forEach(team => { const opt = document.createElement('option'); opt.value = team; opt.textContent = team; teamSelect.appendChild(opt); });
+                    nationalities = [...new Set(players.map(p => p.Nat.toUpperCase()))].sort();
                     const nameToCodes = {};
-                    nationalities.forEach(nationality => {
-                        const lowerNat = nationality.toLowerCase();
-                        const name = fullNames[lowerNat] || nationality;
-                        if (!nameToCodes[name]) {
-                            nameToCodes[name] = [];
-                        }
-                        nameToCodes[name].push(nationality);
-                    });
-
+                    nationalities.forEach(nat => { const name = fullNames[nat.toLowerCase()] || nat; if (!nameToCodes[name]) nameToCodes[name] = []; nameToCodes[name].push(nat); });
                     const nationalitySelect = document.getElementById('nationality-select');
                     nationalitySelect.innerHTML = '<option value="">Todos los países</option>';
-                    Object.keys(nameToCodes).sort().forEach(name => {
-                        const option = document.createElement('option');
-                        option.value = name;
-                        option.textContent = name;
-                        option.setAttribute('data-codes', nameToCodes[name].join(','));
-                        nationalitySelect.appendChild(option);
-                    });
-
+                    Object.keys(nameToCodes).sort().forEach(name => { const opt = document.createElement('option'); opt.value = name; opt.textContent = name; opt.setAttribute('data-codes', nameToCodes[name].join(',')); nationalitySelect.appendChild(opt); });
+                    document.getElementById('update-date').textContent = lastUpdateDate ? `Última actualización: ${lastUpdateDate}` : '';
                     filterPlayers();
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('results').style.display = 'grid';
                 }
-                return Promise.resolve();
+                return;
             }
-
             try {
                 let newPlayers = [];
-                if (season === '37-mid') {
-                    newPlayers = await loadSeason37Mid();
-                } else if (season === '37-start') {
-                    newPlayers = await loadSeason37Start();
-                } else if (season === '36') {
-                    newPlayers = await loadSeason36();
-                } else if (season === '36-start') {
-                    newPlayers = await loadSeason36Start();
-                } else if (season === 'current') {
-                    newPlayers = await loadCurrentSeason();
-                }
+                if (season === '37-mid') newPlayers = await loadSeason37Mid();
+                else if (season === '37-start') newPlayers = await loadSeason37Start();
+                else if (season === '36') newPlayers = await loadSeason36();
+                else if (season === '36-start') newPlayers = await loadSeason36Start();
+                else if (season === 'current') newPlayers = [];
 
                 const faceResponse = await fetch('https://www.tusoccermanager.com/h88-facedb-html');
                 const faceText = await faceResponse.text();
@@ -2756,74 +1945,25 @@
                 const faceContent = facePre ? facePre.textContent : faceText;
                 const faceLines = faceContent.split('\n');
                 faces = {};
-                faceLines.forEach(line => {
-                    const match = line.match(/^([^:]+):\s*(.+)$/);
-                    if (match) {
-                        faces[match[1]] = match[2].trim();
-                    }
-                });
+                faceLines.forEach(line => { const match = line.match(/^([^:]+):\s*(.+)$/); if (match) faces[match[1]] = match[2].trim(); });
                 const unknownFace = faces['Uknown'] || 'https://2img.net/i.imgur.com/7Y9zAkb.png';
-                newPlayers.forEach(player => {
-                    player.face = faces[player.Name] || unknownFace;
-                });
+                newPlayers.forEach(p => { p.face = faces[p.Name] || unknownFace; });
 
                 seasonData[season] = newPlayers;
                 players = newPlayers;
 
-                teams = [...new Set(players.map(player => player.team))].sort();
-
+                teams = [...new Set(players.map(p => p.team))].sort();
                 const teamSelect = document.getElementById('team-select');
                 teamSelect.innerHTML = '<option value="">Todos los equipos</option>';
-                teams.forEach(team => {
-                    const option = document.createElement('option');
-                    option.value = team;
-                    option.textContent = team;
-                    teamSelect.appendChild(option);
-                });
-
-                const tempSpan = document.createElement('span');
-                tempSpan.style.visibility = 'hidden';
-                tempSpan.style.position = 'absolute';
-                tempSpan.style.whiteSpace = 'nowrap';
-                tempSpan.style.fontSize = '14px';
-                tempSpan.style.padding = '10px';
-                document.body.appendChild(tempSpan);
-
-                let maxWidth = 0;
-                Array.from(teamSelect.options).forEach(option => {
-                    tempSpan.textContent = option.textContent;
-                    maxWidth = Math.max(maxWidth, tempSpan.offsetWidth);
-                });
-                document.body.removeChild(tempSpan);
-                teamSelect.style.width = `${maxWidth + 30}px`;
+                teams.forEach(team => { const opt = document.createElement('option'); opt.value = team; opt.textContent = team; teamSelect.appendChild(opt); });
 
                 if (Object.keys(flags).length === 0) {
                     const flagResponse = await fetch('https://www.tusoccermanager.com/h86-flagdb-html');
                     const flagText = await flagResponse.text();
-                    const jsonStart = flagText.indexOf('{');
-                    const jsonEnd = flagText.lastIndexOf('}') + 1;
-                    const jsonText = flagText.slice(jsonStart, jsonEnd);
-                    try {
-                        flags = JSON.parse(jsonText);
-                        const tempFlags = {};
-                        for (const key in flags) {
-                            tempFlags[key.toLowerCase()] = flags[key];
-                        }
-                        flags = tempFlags;
-                    } catch (e) {
-                        console.error("Error parsing flags JSON:", e);
-                        const flagLines = flagText.split('\n');
-                        for (const line of flagLines) {
-                            const match = line.match(/^(\w+):\s+(\S+)$/);
-                            if (match) {
-                                const code = match[1].toLowerCase();
-                                const url = match[2];
-                                flags[code] = url;
-                            }
-                        }
-                    }
+                    const jsonStart = flagText.indexOf('{'); const jsonEnd = flagText.lastIndexOf('}') + 1;
+                    try { flags = JSON.parse(flagText.slice(jsonStart, jsonEnd)); const temp = {}; for (const k in flags) temp[k.toLowerCase()] = flags[k]; flags = temp; }
+                    catch (e) { const flagLines = flagText.split('\n'); for (const line of flagLines) { const m = line.match(/^(\w+):\s+(\S+)$/); if (m) flags[m[1].toLowerCase()] = m[2]; } }
                 }
-
                 if (Object.keys(fullNames).length === 0) {
                     const fullNamesResponse = await fetch('https://www.tusoccermanager.com/h87-fullnamedb-html');
                     const fullNamesText = await fullNamesResponse.text();
@@ -2831,50 +1971,21 @@
                     const fullNamesPre = fullNamesDoc.querySelector('pre');
                     const fullNamesContent = fullNamesPre ? fullNamesPre.textContent : fullNamesText;
                     const fullNamesLines = fullNamesContent.split('\n');
-                    for (const line of fullNamesLines) {
-                        const match = line.match(/^(\w+):\s+(.+)$/);
-                        if (match) {
-                            const code = match[1].toLowerCase();
-                            const name = match[2].trim();
-                            fullNames[code] = name;
-                        }
-                    }
+                    for (const line of fullNamesLines) { const m = line.match(/^(\w+):\s+(.+)$/); if (m) fullNames[m[1].toLowerCase()] = m[2].trim(); }
                 }
-
-                nationalities = [...new Set(players.map(player => player.Nat.toUpperCase()))].sort();
-
+                nationalities = [...new Set(players.map(p => p.Nat.toUpperCase()))].sort();
                 const nameToCodes = {};
-                nationalities.forEach(nationality => {
-                    const lowerNat = nationality.toLowerCase();
-                    const name = fullNames[lowerNat] || nationality;
-                    if (!nameToCodes[name]) {
-                        nameToCodes[name] = [];
-                    }
-                    nameToCodes[name].push(nationality);
-                });
-
+                nationalities.forEach(nat => { const name = fullNames[nat.toLowerCase()] || nat; if (!nameToCodes[name]) nameToCodes[name] = []; nameToCodes[name].push(nat); });
                 const nationalitySelect = document.getElementById('nationality-select');
                 nationalitySelect.innerHTML = '<option value="">Todos los países</option>';
-                Object.keys(nameToCodes).sort().forEach(name => {
-                    const option = document.createElement('option');
-                    option.value = name;
-                    option.textContent = name;
-                    option.setAttribute('data-codes', nameToCodes[name].join(','));
-                    nationalitySelect.appendChild(option);
-                });
+                Object.keys(nameToCodes).sort().forEach(name => { const opt = document.createElement('option'); opt.value = name; opt.textContent = name; opt.setAttribute('data-codes', nameToCodes[name].join(',')); nationalitySelect.appendChild(opt); });
 
                 if (Object.keys(badges).length === 0) {
                     const badgeResponse = await fetch('https://www.tusoccermanager.com/h63-teambadgesdatabase-html');
                     const badgeText = await badgeResponse.text();
-                    const badgeRegex = /<li>\s*([^:]+):\s*(https?:\/\/[^\s<]+)/gi;
-                    let match;
-                    while ((match = badgeRegex.exec(badgeText)) !== null) {
-                        const teamName = match[1].trim().toLowerCase();
-                        const badgeUrl = match[2].trim();
-                        badges[teamName] = badgeUrl;
-                    }
+                    const badgeRegex = /<li>\s*([^:]+):\s*(https?:\/\/[^\s<]+)/gi; let m;
+                    while ((m = badgeRegex.exec(badgeText)) !== null) badges[m[1].trim().toLowerCase()] = m[2].trim();
                 }
-
                 if (Object.keys(stadia).length === 0) {
                     const stadiumResponse = await fetch('https://www.tusoccermanager.com/h90-stadia-html');
                     const stadiumText = await stadiumResponse.text();
@@ -2882,29 +1993,17 @@
                     const stadiumPre = stadiumDoc.querySelector('pre');
                     const stadiumContent = stadiumPre ? stadiumPre.textContent : stadiumText;
                     const stadiumLines = stadiumContent.split('\n');
-                    stadiumLines.forEach(line => {
-                        const match = line.match(/^([^:]+):\s*(.+)$/);
-                        if (match) {
-                            stadia[match[1].trim().toLowerCase()] = match[2].trim();
-                        }
-                    });
+                    stadiumLines.forEach(line => { const m = line.match(/^([^:]+):\s*(.+)$/); if (m) stadia[m[1].trim().toLowerCase()] = m[2].trim(); });
                 }
 
-                if (!window.positionSetupDone) {
-                    setupPositionCheckboxes();
-                    window.positionSetupDone = true;
-                }
+                document.getElementById('update-date').textContent = lastUpdateDate ? `Última actualización: ${lastUpdateDate}` : '';
 
-                setupAgeSlider();
-                setupAttributeSliders();
-
+                if (!window.positionSetupDone) { setupPositionCheckboxes(); window.positionSetupDone = true; }
+                setupAgeSlider(); setupAttributeSliders();
                 resetAllFilters();
             } catch (error) {
                 console.error('Error loading data:', error);
-                if (!silent) {
-                    document.getElementById('results').innerHTML =
-                        '<p>Error al cargar los datos. Intenta recargar la página.</p>';
-                }
+                if (!silent) document.getElementById('results').innerHTML = '<p>Error al cargar los datos. Intenta recargar la página.</p>';
             } finally {
                 if (!silent) {
                     document.getElementById('loading').style.display = 'none';
@@ -2915,70 +2014,39 @@
 
         function render(filteredPlayers) {
             const results = document.getElementById('results');
-            results.innerHTML = '';
-
-            document.getElementById('player-counter').textContent =
-                `${filteredPlayers.length} jugador${filteredPlayers.length !== 1 ? 'es' : ''}`;
-
+            results.querySelectorAll('.card, .no-results').forEach(el => el.remove());
+            document.getElementById('player-counter').textContent = `${formatNumber(filteredPlayers.length)} jugador${filteredPlayers.length !== 1 ? 'es' : ''}`;
             if (filteredPlayers.length === 0) {
-                results.innerHTML =
-                    '<p class="no-results">No se encontraron jugadores que coincidan con los filtros.</p>';
+                const noRes = document.createElement('p');
+                noRes.className = 'no-results';
+                noRes.textContent = 'No se encontraron jugadores que coincidan con los filtros.';
+                results.appendChild(noRes);
                 return;
             }
-
             filteredPlayers.forEach(player => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 const badgeUrl = badges[player.team.toLowerCase()] || '';
-
                 const flagCode = player.Nat.toLowerCase();
                 const flagUrl = flags[flagCode] || '';
-
                 const formattedName = formatPlayerName(player.Name);
-
-                const attributes = {
-                    'St': parseInt(player.St) || 0,
-                    'Tk': parseInt(player.Tk) || 0,
-                    'Ps': parseInt(player.Ps) || 0,
-                    'Sh': parseInt(player.Sh) || 0
-                };
-
+                const attributes = {'St':parseInt(player.St)||0,'Tk':parseInt(player.Tk)||0,'Ps':parseInt(player.Ps)||0,'Sh':parseInt(player.Sh)||0};
                 const maxValue = Math.max(...Object.values(attributes));
                 const highestAttributes = Object.keys(attributes).filter(attr => attributes[attr] === maxValue);
-
                 const nationalityName = fullNames[flagCode] || player.Nat;
-
-                const kabArrow = parseInt(player.KAb) >= 900 ?
-                    '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' :
-                    '';
-                const tabArrow = parseInt(player.TAb) >= 900 ?
-                    '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' :
-                    '';
-                const pabArrow = parseInt(player.PAb) >= 900 ?
-                    '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' :
-                    '';
-                const sabArrow = parseInt(player.SAb) >= 900 ?
-                    '<span title="A punto de subir" style="color: green; font-size: 14px; margin-left: 2px;">↑</span>' :
-                    '';
-
-                const inj = parseInt(player.Inj) || 0;
-                const sus = parseInt(player.Sus) || 0;
+                const kabArrow = parseInt(player.KAb) >= 900 ? '<span title="A punto de subir" style="color:green;font-size:14px;margin-left:2px;">↑</span>' : '';
+                const tabArrow = parseInt(player.TAb) >= 900 ? '<span title="A punto de subir" style="color:green;font-size:14px;margin-left:2px;">↑</span>' : '';
+                const pabArrow = parseInt(player.PAb) >= 900 ? '<span title="A punto de subir" style="color:green;font-size:14px;margin-left:2px;">↑</span>' : '';
+                const sabArrow = parseInt(player.SAb) >= 900 ? '<span title="A punto de subir" style="color:green;font-size:14px;margin-left:2px;">↑</span>' : '';
+                const inj = parseInt(player.Inj)||0, sus = parseInt(player.Sus)||0;
                 let status = '';
-                if (inj > 0) {
-                    const partidoText = inj === 1 ? 'partido' : 'partidos';
-                    status +=
-                        `<span class="status-tag" title="Lesionado por ${inj} ${partidoText}">LES</span>`;
-                }
-                if (sus > 0) {
-                    const partidoText = sus === 1 ? 'partido' : 'partidos';
-                    status +=
-                        `<span class="status-tag" title="Sancionado por ${sus} ${partidoText}">SAN</span>`;
-                }
+                if (inj > 0) status += `<span class="status-tag" title="Lesionado por ${inj} ${inj===1?'partido':'partidos'}">LES</span>`;
+                if (sus > 0) status += `<span class="status-tag" title="Sancionado por ${sus} ${sus===1?'partido':'partidos'}">SAN</span>`;
 
                 card.innerHTML = `
-                    <div style="position: absolute; top: 10px; left: 10px; cursor: pointer; font-size: 16px;" onclick='showPlayerStats(${JSON.stringify(player)})'>☰</div>
-                    <div class="estimated-value">${player.value.toFixed(2)}M</div>
-                    <div class="salary">${player.salary}M</div>
+                    <div style="position:absolute;top:10px;left:10px;cursor:pointer;font-size:16px;" onclick='showPlayerStats(${JSON.stringify(player)})'>☰</div>
+                    <div class="estimated-value">${formatNumber(player.value.toFixed(2))}M</div>
+                    <div class="salary">${formatNumber(player.salary)}M</div>
                     <img class="face" src="${player.face}" alt="${formattedName} face" onerror="this.src='https://2img.net/i.imgur.com/7Y9zAkb.png'" />
                     <div class="info-block">
                         <img class="badge" src="${badgeUrl}" alt="${player.team} badge" onerror="this.style.display='none'" />
@@ -2986,90 +2054,58 @@
                             <h3 title="Ver plantilla" onclick='showTeamSquad("${player.team}")'>${player.team}</h3>
                             <h2>${formattedName}${status}</h2>
                             <p>${player.Age} años</p>
-                            <div class="nationality">
-                                ${flagUrl ? `<img src="${flagUrl}" alt="${player.Nat} flag" onerror="this.style.display='none'" />` : ''}
-                                ${nationalityName}
-                            </div>
+                            <div class="nationality">${flagUrl?`<img src="${flagUrl}" alt="${player.Nat} flag" onerror="this.style.display='none'"/>`:''} ${nationalityName}</div>
                         </div>
                     </div>
                     <div class="attributes">
-                        <div class="attr">
-                            <label>GK</label>
-                            <span class="${highestAttributes.includes('St') ? 'highlight' : ''}">${player.St}</span>
-                            <div class="experience">${player.KAb}${kabArrow}</div>
-                        </div>
-                        <div class="attr">
-                            <label>DF</label>
-                            <span class="${highestAttributes.includes('Tk') ? 'highlight' : ''}">${player.Tk}</span>
-                            <div class="experience">${player.TAb}${tabArrow}</div>
-                        </div>
-                        <div class="attr">
-                            <label>MF</label>
-                            <span class="${highestAttributes.includes('Ps') ? 'highlight' : ''}">${player.Ps}</span>
-                            <div class="experience">${player.PAb}${pabArrow}</div>
-                        </div>
-                        <div class="attr">
-                            <label>FW</label>
-                            <span class="${highestAttributes.includes('Sh') ? 'highlight' : ''}">${player.Sh}</span>
-                            <div class="experience">${player.SAb}${sabArrow}</div>
-                        </div>
-                    </div>
-                `;
+                        <div class="attr"><label>GK</label><span class="${highestAttributes.includes('St')?'highlight':''}">${player.St}</span><div class="experience">${formatNumber(player.KAb)}${kabArrow}</div></div>
+                        <div class="attr"><label>DF</label><span class="${highestAttributes.includes('Tk')?'highlight':''}">${player.Tk}</span><div class="experience">${formatNumber(player.TAb)}${tabArrow}</div></div>
+                        <div class="attr"><label>MF</label><span class="${highestAttributes.includes('Ps')?'highlight':''}">${player.Ps}</span><div class="experience">${formatNumber(player.PAb)}${pabArrow}</div></div>
+                        <div class="attr"><label>FW</label><span class="${highestAttributes.includes('Sh')?'highlight':''}">${player.Sh}</span><div class="experience">${formatNumber(player.SAb)}${sabArrow}</div></div>
+                    </div>`;
                 results.appendChild(card);
             });
         }
 
         function levenshtein(a, b) {
-            const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
-            for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
-            for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
-            for (let j = 1; j <= b.length; j++) {
-                for (let i = 1; i <= a.length; i++) {
-                    const substitutionCost = a[i - 1] === b[j - 1] ? 0 : 1;
-                    matrix[j][i] = Math.min(
-                        matrix[j - 1][i] + 1,
-                        matrix[j][i - 1] + 1,
-                        matrix[j - 1][i - 1] + substitutionCost
-                    );
-                }
+            const matrix = Array(b.length+1).fill(null).map(()=>Array(a.length+1).fill(null));
+            for (let i=0;i<=a.length;i++) matrix[0][i]=i;
+            for (let j=0;j<=b.length;j++) matrix[j][0]=j;
+            for (let j=1;j<=b.length;j++) for (let i=1;i<=a.length;i++) {
+                matrix[j][i] = Math.min(matrix[j-1][i]+1, matrix[j][i-1]+1, matrix[j-1][i-1]+(a[i-1]===b[j-1]?0:1));
             }
             return matrix[b.length][a.length];
         }
 
         function filterPlayers() {
             const nameQuery = document.getElementById('search').value.toLowerCase();
-
             if (nameQuery) {
                 document.getElementById('team-select').value = '';
                 document.getElementById('nationality-select').value = '';
                 document.getElementById('value-select').value = '';
+                document.getElementById('goals-filter').value = '';
+                document.getElementById('assists-filter').value = '';
                 document.getElementById('position-all').checked = true;
-                document.getElementById('position-gk').checked = false;
-                document.getElementById('position-df').checked = false;
-                document.getElementById('position-mf').checked = false;
-                document.getElementById('position-fw').checked = false;
-                document.getElementById('thumb-min').setAttribute('data-value', '16');
-                document.getElementById('thumb-max').setAttribute('data-value', '40');
-                document.getElementById('gk-thumb-min').setAttribute('data-value', '1');
-                document.getElementById('gk-thumb-max').setAttribute('data-value', '28');
-                document.getElementById('df-thumb-min').setAttribute('data-value', '1');
-                document.getElementById('df-thumb-max').setAttribute('data-value', '28');
-                document.getElementById('mf-thumb-min').setAttribute('data-value', '1');
-                document.getElementById('mf-thumb-max').setAttribute('data-value', '28');
-                document.getElementById('fw-thumb-min').setAttribute('data-value', '1');
-                document.getElementById('fw-thumb-max').setAttribute('data-value', '28');
-                document.getElementById('gk-experience').value = '';
-                document.getElementById('df-experience').value = '';
-                document.getElementById('mf-experience').value = '';
-                document.getElementById('fw-experience').value = '';
-
-                setupAgeSlider();
-                setupAttributeSliders();
+                document.getElementById('position-gk').checked = document.getElementById('position-df').checked = document.getElementById('position-mf').checked = document.getElementById('position-fw').checked = false;
+                document.getElementById('thumb-min').setAttribute('data-value','16');
+                document.getElementById('thumb-max').setAttribute('data-value','40');
+                document.getElementById('gk-thumb-min').setAttribute('data-value','1');
+                document.getElementById('gk-thumb-max').setAttribute('data-value','28');
+                document.getElementById('df-thumb-min').setAttribute('data-value','1');
+                document.getElementById('df-thumb-max').setAttribute('data-value','28');
+                document.getElementById('mf-thumb-min').setAttribute('data-value','1');
+                document.getElementById('mf-thumb-max').setAttribute('data-value','28');
+                document.getElementById('fw-thumb-min').setAttribute('data-value','1');
+                document.getElementById('fw-thumb-max').setAttribute('data-value','28');
+                document.getElementById('gk-experience').value = document.getElementById('df-experience').value = document.getElementById('mf-experience').value = document.getElementById('fw-experience').value = '';
+                setupAgeSlider(); setupAttributeSliders();
             }
 
             const teamQuery = document.getElementById('team-select').value;
             const nationalityQuery = document.getElementById('nationality-select').value;
             const valueQuery = document.getElementById('value-select').value;
+            const minGoals = parseInt(document.getElementById('goals-filter').value) || 0;
+            const minAssists = parseInt(document.getElementById('assists-filter').value) || 0;
 
             const allChecked = document.getElementById('position-all').checked;
             const gkChecked = document.getElementById('position-gk').checked;
@@ -3079,7 +2115,6 @@
 
             const minAge = parseInt(document.getElementById('thumb-min').getAttribute('data-value'));
             const maxAge = parseInt(document.getElementById('thumb-max').getAttribute('data-value'));
-
             const gkMin = parseInt(document.getElementById('gk-thumb-min').getAttribute('data-value'));
             const gkMax = parseInt(document.getElementById('gk-thumb-max').getAttribute('data-value'));
             const dfMin = parseInt(document.getElementById('df-thumb-min').getAttribute('data-value'));
@@ -3098,212 +2133,110 @@
             const filterByPosition = !allChecked && positionsSelected;
 
             let filtered = players;
-
             if (nameQuery) {
                 const nameQueryWithUnderscores = nameQuery.replace(/ /g, '_');
-                filtered = filtered.filter(player =>
-                    player.Name.toLowerCase().includes(nameQueryWithUnderscores)
-                );
+                filtered = filtered.filter(p => p.Name.toLowerCase().includes(nameQueryWithUnderscores));
                 if (filtered.length === 0) {
-                    const candidates = players.map(p => ({
-                        player: p,
-                        dist: levenshtein(nameQueryWithUnderscores, p.Name.toLowerCase())
-                    })).sort((a, b) => a.dist - b.dist).slice(0, 20);
+                    const candidates = players.map(p => ({ player: p, dist: levenshtein(nameQueryWithUnderscores, p.Name.toLowerCase()) }))
+                        .sort((a,b) => a.dist - b.dist).slice(0,20);
                     filtered = candidates.filter(c => c.dist <= 3).map(c => c.player);
                 }
             }
-
-            if (teamQuery) {
-                filtered = filtered.filter(player => player.team === teamQuery);
-            }
-
+            if (teamQuery) filtered = filtered.filter(p => p.team === teamQuery);
             if (nationalityQuery) {
-                const selectedOption = document.querySelector(
-                    `#nationality-select option[value="${nationalityQuery}"]`);
+                const selectedOption = document.querySelector(`#nationality-select option[value="${nationalityQuery}"]`);
                 const codes = selectedOption ? selectedOption.getAttribute('data-codes').split(',') : [];
-                if (codes.length > 0) {
-                    filtered = filtered.filter(player =>
-                        codes.includes(player.Nat.toUpperCase())
-                    );
-                }
+                if (codes.length) filtered = filtered.filter(p => codes.includes(p.Nat.toUpperCase()));
             }
-
             if (filterByPosition) {
-                filtered = filtered.filter(player => {
-                    const positions = player.positions;
-                    return (
-                        (gkChecked && positions.includes('GK')) ||
-                        (dfChecked && positions.includes('DF')) ||
-                        (mfChecked && positions.includes('MF')) ||
-                        (fwChecked && positions.includes('FW'))
-                    );
+                filtered = filtered.filter(p => {
+                    const pos = p.positions;
+                    return (gkChecked && pos.includes('GK')) || (dfChecked && pos.includes('DF')) || (mfChecked && pos.includes('MF')) || (fwChecked && pos.includes('FW'));
                 });
             }
-
-            filtered = filtered.filter(player => {
-                const age = parseInt(player.Age);
-                return age >= minAge && age <= maxAge;
+            filtered = filtered.filter(p => { const age = parseInt(p.Age); return age >= minAge && age <= maxAge; });
+            filtered = filtered.filter(p => {
+                return (parseInt(p.St) >= gkMin && parseInt(p.St) <= gkMax) && (parseInt(p.Tk) >= dfMin && parseInt(p.Tk) <= dfMax) && (parseInt(p.Ps) >= mfMin && parseInt(p.Ps) <= mfMax) && (parseInt(p.Sh) >= fwMin && parseInt(p.Sh) <= fwMax);
             });
-
-            filtered = filtered.filter(player => {
-                const gkAttr = parseInt(player.St);
-                const dfAttr = parseInt(player.Tk);
-                const mfAttr = parseInt(player.Ps);
-                const fwAttr = parseInt(player.Sh);
-
-                return (
-                    gkAttr >= gkMin && gkAttr <= gkMax &&
-                    dfAttr >= dfMin && dfAttr <= dfMax &&
-                    mfAttr >= mfMin && mfAttr <= mfMax &&
-                    fwAttr >= fwMin && fwAttr <= fwMax
-                );
+            filtered = filtered.filter(p => {
+                return (gkExp==='' || parseInt(p.KAb) >= parseInt(gkExp)) && (dfExp==='' || parseInt(p.TAb) >= parseInt(dfExp)) && (mfExp==='' || parseInt(p.PAb) >= parseInt(mfExp)) && (fwExp==='' || parseInt(p.SAb) >= parseInt(fwExp));
             });
-
-            filtered = filtered.filter(player => {
-                const gkExpValue = parseInt(player.KAb);
-                const dfExpValue = parseInt(player.TAb);
-                const mfExpValue = parseInt(player.PAb);
-                const fwExpValue = parseInt(player.SAb);
-
-                return (
-                    (gkExp === '' || gkExpValue >= parseInt(gkExp)) &&
-                    (dfExp === '' || dfExpValue >= parseInt(dfExp)) &&
-                    (mfExp === '' || mfExpValue >= parseInt(mfExp)) &&
-                    (fwExp === '' || fwExpValue >= parseInt(fwExp))
-                );
-            });
-
             if (valueQuery) {
-                filtered = filtered.filter(player => {
-                    const value = player.value;
-                    if (valueQuery === '0-10') {
-                        return value >= 0 && value <= 10;
-                    } else if (valueQuery === '11-20') {
-                        return value > 10 && value <= 20;
-                    } else if (valueQuery === '21-30') {
-                        return value > 20 && value <= 30;
-                    } else if (valueQuery === '>30') {
-                        return value > 30;
-                    }
+                filtered = filtered.filter(p => {
+                    const v = p.value;
+                    if (valueQuery === '0-10') return v >= 0 && v <= 10;
+                    else if (valueQuery === '11-20') return v > 10 && v <= 20;
+                    else if (valueQuery === '21-30') return v > 20 && v <= 30;
+                    else if (valueQuery === '>30') return v > 30;
                     return true;
                 });
             }
+            if (minGoals > 0) filtered = filtered.filter(p => (parseInt(p.Gls)||0) >= minGoals);
+            if (minAssists > 0) filtered = filtered.filter(p => (parseInt(p.Ass)||0) >= minAssists);
 
-            filtered.sort((a, b) => {
-                if (a.value !== b.value) {
-                    return b.value - a.value;
-                }
-                return a.Name.localeCompare(b.Name);
-            });
-
+            filtered.sort((a,b) => b.value - a.value || a.Name.localeCompare(b.Name));
             render(filtered);
         }
 
-        document.getElementById('search').addEventListener('input', filterPlayers);
-
-        document.getElementById('team-select').addEventListener('change', function() {
-            filterPlayers();
-            document.getElementById('search').value = '';
-            document.getElementById('search-clear').style.display = 'none';
+        document.getElementById('search').addEventListener('input', function() {
+            document.getElementById('search-clear').style.display = this.value ? 'block' : 'none';
+            scheduleFilter();
         });
-
-        document.getElementById('nationality-select').addEventListener('change', function() {
-            filterPlayers();
-            document.getElementById('search').value = '';
-            document.getElementById('search-clear').style.display = 'none';
-        });
-
-        document.getElementById('value-select').addEventListener('change', function() {
-            filterPlayers();
-            document.getElementById('search').value = '';
-            document.getElementById('search-clear').style.display = 'none';
-        });
-
-        document.getElementById('reset-team').addEventListener('click', () => {
-            document.getElementById('team-select').value = '';
-            filterPlayers();
-            document.getElementById('search').value = '';
-            document.getElementById('search-clear').style.display = 'none';
-        });
-
-        document.getElementById('reset-nationality').addEventListener('click', () => {
-            document.getElementById('nationality-select').value = '';
-            filterPlayers();
-            document.getElementById('search').value = '';
-            document.getElementById('search-clear').style.display = 'none';
-        });
-
-        document.getElementById('reset-value').addEventListener('click', () => {
-            document.getElementById('value-select').value = '';
-            filterPlayers();
-            document.getElementById('search').value = '';
-            document.getElementById('search-clear').style.display = 'none';
-        });
-
         document.getElementById('search-clear').addEventListener('click', function() {
             document.getElementById('search').value = '';
             this.style.display = 'none';
-            filterPlayers();
+            scheduleFilter();
         });
+        document.getElementById('team-select').addEventListener('change', function() {
+            document.getElementById('search').value = ''; document.getElementById('search-clear').style.display = 'none';
+            scheduleFilter();
+        });
+        document.getElementById('nationality-select').addEventListener('change', function() {
+            document.getElementById('search').value = ''; document.getElementById('search-clear').style.display = 'none';
+            scheduleFilter();
+        });
+        document.getElementById('value-select').addEventListener('change', function() {
+            document.getElementById('search').value = ''; document.getElementById('search-clear').style.display = 'none';
+            scheduleFilter();
+        });
+        document.getElementById('goals-filter').addEventListener('input', scheduleFilter);
+        document.getElementById('assists-filter').addEventListener('input', scheduleFilter);
+        document.getElementById('reset-team').addEventListener('click', ()=>{ document.getElementById('team-select').value=''; scheduleFilter(); });
+        document.getElementById('reset-nationality').addEventListener('click', ()=>{ document.getElementById('nationality-select').value=''; scheduleFilter(); });
+        document.getElementById('reset-value').addEventListener('click', ()=>{ document.getElementById('value-select').value=''; scheduleFilter(); });
 
-        document.getElementById('search').addEventListener('input', function() {
-            document.getElementById('search-clear').style.display = this.value ? 'block' : 'none';
-        });
-
-        document.getElementById('back-to-top').addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        window.addEventListener('scroll', function() {
-            const backToTop = document.getElementById('back-to-top');
-            if (window.pageYOffset > 300) {
-                backToTop.classList.add('show');
-            } else {
-                backToTop.classList.remove('show');
-            }
-        });
+        document.getElementById('back-to-top').addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+        window.addEventListener('scroll', ()=> document.getElementById('back-to-top').classList.toggle('show', window.pageYOffset > 300));
 
         const modal = document.getElementById('myModal');
-        const span = document.getElementsByClassName("close")[0];
-        span.onclick = function() {
-            modal.style.display = "none";
-        };
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        };
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                modal.style.display = "none";
-            }
-        });
+        document.querySelector('.close').onclick = () => modal.style.display = 'none';
+        window.onclick = e => { if (e.target == modal) modal.style.display = 'none'; };
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.style.display = 'none'; });
 
         const darkToggle = document.getElementById('darkModeToggle');
-        darkToggle.addEventListener('click', function() {
-            document.body.classList.toggle('dark');
-            const svg = this.querySelector('svg');
+        function updateDarkModeUI() {
             if (document.body.classList.contains('dark')) {
-                svg.innerHTML =
-                    '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/>';
+                darkToggle.textContent = 'Modo claro';
             } else {
-                svg.innerHTML =
-                    '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>';
+                darkToggle.textContent = 'Modo oscuro';
             }
+        }
+        darkToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            updateDarkModeUI();
         });
+        updateDarkModeUI();
 
-        document.getElementById('tsmButton').addEventListener('click', function() {
-            window.open('https://www.tusoccermanager.com/', '_blank');
-        });
+        document.getElementById('tsmButton').addEventListener('click', ()=> window.open('https://www.tusoccermanager.com/', '_blank'));
 
-        document.getElementById('toggle-card-size').style.display = 'block';
+        const toggleCardSize = document.getElementById('toggle-card-size');
         let smallMode = true;
         document.getElementById('results').classList.add('small-cards');
-        document.getElementById('toggle-card-size').textContent = 'Aumentar tarjetas';
-        document.getElementById('toggle-card-size').addEventListener('click', function() {
+        toggleCardSize.textContent = 'Aumentar tarjetas';
+        toggleCardSize.addEventListener('click', () => {
             smallMode = !smallMode;
             document.getElementById('results').classList.toggle('small-cards');
-            this.textContent = smallMode ? 'Aumentar tarjetas' : 'Reducir tarjetas';
+            toggleCardSize.textContent = smallMode ? 'Aumentar tarjetas' : 'Reducir tarjetas';
         });
 
         document.getElementById('season-select').addEventListener('change', function(e) {
@@ -3321,11 +2254,26 @@
             arrow.classList.toggle('up');
         });
 
+        // Sidebar toggle con icono X
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('expanded');
+            const svg = sidebarToggle.querySelector('svg');
+            if (sidebar.classList.contains('expanded')) {
+                svg.innerHTML = '<line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+            } else {
+                svg.innerHTML = '<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>';
+            }
+        });
+
         if (window !== window.top) {
-            document.getElementById('fullscreen-link').style.display = 'block';
-            document.getElementById('fullscreen-link').addEventListener('click', function() {
-                window.open('https://www.tusoccermanager.com/h89-playersearch-html', '_blank');
-            });
+            const fullscreenLink = document.createElement('div');
+            fullscreenLink.id = 'fullscreen-link';
+            fullscreenLink.style.cssText = 'display:block;position:absolute;top:10px;right:10px;background:#1a365d;color:white;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:14px;z-index:200;';
+            fullscreenLink.textContent = '↗ Ver en pantalla completa';
+            fullscreenLink.addEventListener('click', ()=> window.open('https://www.tusoccermanager.com/h89-playersearch-html', '_blank'));
+            document.body.prepend(fullscreenLink);
         }
 
         updateMobileNote();
