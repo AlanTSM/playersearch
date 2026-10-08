@@ -53,21 +53,28 @@
         }
         #search {
             width: 100%;
-            padding: 12px 12px 12px 40px;
+            padding: 12px 20px 12px 40px;
             font-size: 16px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 25px;
             box-sizing: border-box;
-            transition: border-color 0.3s, background-color 0.3s;
+            transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+        }
+        #search:focus {
+            outline: none;
+            box-shadow: 0 2px 10px rgba(26, 54, 93, 0.15);
         }
         body.dark #search {
             border-color: #555;
             background-color: #333;
             color: #ddd;
         }
+        body.dark #search:focus {
+            box-shadow: 0 2px 10px rgba(168, 195, 230, 0.15);
+        }
         .search-clear {
             position: absolute;
-            left: 10px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
@@ -416,7 +423,7 @@
             color: white;
         }
         select option:nth-child(even) {
-            background: #f9f9f9;
+            background: #e2e8f0;
         }
         body.dark select option:nth-child(even) {
             background: #3a3a3a;
@@ -426,6 +433,36 @@
         }
         body.dark select option:nth-child(odd) {
             background: #2a2a2a;
+        }
+        select {
+            scrollbar-width: thin;
+            scrollbar-color: #1a365d #f0f0f0;
+        }
+        body.dark select {
+            scrollbar-color: #2c5282 #444;
+        }
+        select::-webkit-scrollbar {
+            width: 8px;
+        }
+        select::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        select::-webkit-scrollbar-thumb {
+            background: #1a365d;
+            border-radius: 4px;
+        }
+        select::-webkit-scrollbar-thumb:hover {
+            background: #2c5282;
+        }
+        body.dark select::-webkit-scrollbar-track {
+            background: #444;
+        }
+        body.dark select::-webkit-scrollbar-thumb {
+            background: #2c5282;
+        }
+        body.dark select::-webkit-scrollbar-thumb:hover {
+            background: #3f6a9e;
         }
         .team-selector {
             width: auto;
@@ -996,6 +1033,149 @@
         }
         body.dark .team-header img[alt*="stadium"] { border-color: #555; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
 
+        /* ====== History section styles ====== */
+        .history-section-title {
+            margin-top: 18px;
+            margin-bottom: 6px;
+            color: #1a365d;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        body.dark .history-section-title {
+            color: #a8c3e6;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+            font-size: 13px;
+        }
+        .history-table th,
+        .history-table td {
+            padding: 6px 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        .history-table th {
+            background: #f0f4f8;
+            font-weight: 600;
+            color: #1a365d;
+        }
+        body.dark .history-table th {
+            background: #333;
+            color: #a8c3e6;
+        }
+        body.dark .history-table td {
+            border-bottom-color: #444;
+            color: #ddd;
+        }
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+        /* ====== NEW: Total row style ====== */
+        .history-table tr.history-total td {
+            border-top: 2px solid #1a365d;
+            background: #eef3fa;
+            font-weight: 600;
+            color: #1a365d;
+        }
+        body.dark .history-table tr.history-total td {
+            border-top-color: #a8c3e6;
+            background: #2f3a4a;
+            color: #a8c3e6;
+        }
+
+        /* ====== Player header in modal (face + flag + name + position) ====== */
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+            padding-right: 30px;
+        }
+        .player-header .player-face {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid #1a365d;
+            background: #f4f4f4;
+        }
+        body.dark .player-header .player-face {
+            border-color: #a8c3e6;
+            background: #333;
+        }
+        .player-header-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            min-width: 0;
+        }
+        .player-header-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .player-header-name-row h2 {
+            margin: 0;
+            text-align: left;
+            color: #1a365d;
+            transition: color 0.3s;
+        }
+        body.dark .player-header-name-row h2 {
+            color: #a8c3e6;
+        }
+        .player-flag {
+            width: 26px;
+            height: 18px;
+            border-radius: 3px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        body.dark .player-flag {
+            border-color: rgba(255,255,255,0.15);
+        }
+        .player-position-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: color 0.3s;
+        }
+        body.dark .player-position-label {
+            color: #aaa;
+        }
+
+        /* ====== Stats section title ====== */
+        .stats-section-title {
+            margin-top: 10px;
+            margin-bottom: 8px;
+            color: #1a365d;
+            font-size: 15px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        body.dark .stats-section-title {
+            color: #a8c3e6;
+        }
+
+        /* ====== Stats grid - 3 items on one row ====== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .stats-grid p {
+            margin: 0;
+            font-size: 13px;
+            text-align: center;
+        }
+
         /* Sidebar */
         .sidebar {
             position: fixed;
@@ -1112,7 +1292,6 @@
         body.dark th, body.dark td { border-bottom-color: #444; }
         th { background-color: #f2f2f2; }
         body.dark th { background-color: #333; }
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .squad-table { width: 100%; border-collapse: collapse; }
         .squad-table th, .squad-table td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
         body.dark .squad-table th, body.dark .squad-table td { border-bottom-color: #444; }
@@ -1124,6 +1303,19 @@
             margin-left: auto; padding: 5px 10px; border-radius: 20px; border: 1px solid #ccc; background: #f9f9f9; font-size: 14px; cursor: pointer;
         }
         body.dark .modal-season-select { background: #333; border-color: #555; color: #ddd; }
+
+        /* Hamburger icon tooltip */
+        .card-menu-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        .card-menu-icon:hover {
+            color: #e74c3c;
+        }
     </style>
 </head>
 <body>
@@ -1134,7 +1326,8 @@
         <div class="sidebar-content">
             <div class="sidebar-section-title">Seleccionar periodo</div>
             <select id="season-select">
-                <option value="37-mid" selected>Temp. 37 - Intermedio</option>
+                <option value="37" selected>Temp. 37 - Final</option>
+                <option value="37-mid">Temp. 37 - Intermedio</option>
                 <option value="37-start">Temp. 37 - Inicio</option>
                 <option value="36">Temp. 36 - Final</option>
                 <option value="36-start">Temp. 36 - Inicio</option>
@@ -1358,13 +1551,25 @@
         let flags = {};
         let fullNames = {};
         let faces = {};
+        let facesLower = {};
+        let facesLoaded = false;
         let stadia = {};
         let teams = [];
         let nationalities = [];
         let lastUpdateDate = '';
 
-        let currentSeason = '37-mid';
+        const FIXED_UPDATE_DATE = '07/10/2026';
+
+        let currentSeason = '37';
         const seasonData = {};
+
+        const nameIndexCache = {};
+
+        const domCache = {};
+        function $(id) {
+            if (!domCache[id]) domCache[id] = document.getElementById(id);
+            return domCache[id];
+        }
 
         function formatNumber(num) {
             if (num == null || isNaN(num)) return num;
@@ -1455,6 +1660,17 @@
             };
             const maxValue = Math.max(...Object.values(attributes));
             return Object.keys(attributes).filter(pos => attributes[pos] === maxValue);
+        }
+
+        // ====== NEW: position label helper ======
+        function getPositionLabel(positions) {
+            if (!positions || positions.length === 0) return '';
+            const p = positions[0];
+            if (p === 'GK') return 'Portero';
+            if (p === 'DF') return 'Defensa';
+            if (p === 'MF') return 'Centrocampista';
+            if (p === 'FW') return 'Delantero';
+            return '';
         }
 
         let filterTimeout = null;
@@ -1683,7 +1899,117 @@
             setupAttributeSliders();
         }
 
-        function showPlayerStats(player) {
+        /* ============================================================
+           FACE DATABASE (loaded once globally)
+           ============================================================ */
+        async function loadFacesOnce() {
+            if (facesLoaded) return;
+            facesLoaded = true;
+            try {
+                const faceResponse = await fetch('https://www.tusoccermanager.com/h88-facedb-html');
+                const faceText = await faceResponse.text();
+                const faceDoc = new DOMParser().parseFromString(faceText, 'text/html');
+                const facePre = faceDoc.querySelector('pre');
+                const faceContent = facePre ? facePre.textContent : faceText;
+                const faceLines = faceContent.split('\n');
+                faces = {};
+                facesLower = {};
+                faceLines.forEach(line => {
+                    const match = line.match(/^([^:]+):\s*(.+)$/);
+                    if (match) {
+                        const name = match[1];
+                        const url = match[2].trim();
+                        faces[name] = url;
+                        facesLower[name.toLowerCase()] = url;
+                    }
+                });
+            } catch (e) {
+                console.warn('No se pudieron cargar las caras:', e);
+                facesLoaded = false;
+            }
+        }
+
+        function assignFace(player) {
+            const unknownFace = faces['Uknown'] || 'https://2img.net/i/imgur.com/7Y9zAkb.png';
+            return faces[player.Name] || facesLower[player.Name.toLowerCase()] || unknownFace;
+        }
+
+        /* ============================================================
+           HISTORY HELPERS
+           ============================================================ */
+
+        function getNameIndex(season) {
+            if (nameIndexCache[season]) return nameIndexCache[season];
+            const seasonPlayers = seasonData[season] || [];
+            const index = {};
+            for (let i = 0; i < seasonPlayers.length; i++) {
+                index[seasonPlayers[i].Name] = seasonPlayers[i];
+            }
+            nameIndexCache[season] = index;
+            return index;
+        }
+
+        async function ensureFinalSeasonLoaded(season) {
+            if (seasonData[season]) return seasonData[season];
+            const savedDate = lastUpdateDate;
+            let newPlayers = [];
+            if (season === '37') newPlayers = await loadSeason37Final();
+            else if (season === '36') newPlayers = await loadSeason36();
+            lastUpdateDate = savedDate;
+            if (newPlayers.length) {
+                await loadFacesOnce();
+                newPlayers.forEach(p => { p.face = assignFace(p); });
+                seasonData[season] = newPlayers;
+            }
+            return newPlayers;
+        }
+
+        async function getPlayerHistory(playerName) {
+            const finalSeasons = [
+                { id: '37', label: 'T37' },
+                { id: '36', label: 'T36' }
+            ];
+
+            for (const s of finalSeasons) {
+                if (!seasonData[s.id]) {
+                    await ensureFinalSeasonLoaded(s.id);
+                }
+            }
+
+            const history = [];
+            for (const s of finalSeasons) {
+                const index = getNameIndex(s.id);
+                const p = index[playerName];
+                if (p) {
+                    history.push({
+                        season: s.label,
+                        team: p.team,
+                        gam: p.Gam,
+                        gls: p.Gls,
+                        con: p.Con,
+                        ass: p.Ass,
+                        mom: p.Mom,
+                        positions: p.positions || []
+                    });
+                }
+            }
+            return history;
+        }
+
+        /* ============================================================
+           MODAL: PLAYER STATS + HISTORY
+           ============================================================ */
+
+        // ====== UPDATED: removed " - Final" suffix on final seasons ======
+        const SEASON_LABELS = {
+            '37': '37',
+            '37-mid': '37 - Intermedio',
+            '37-start': '37 - Inicio',
+            '36': '36',
+            '36-start': '36 - Inicio'
+        };
+
+        async function showPlayerStats(player) {
             const attrs = [parseInt(player.St)||0, parseInt(player.Tk)||0, parseInt(player.Ps)||0, parseInt(player.Sh)||0];
             const maxAttr = Math.max(...attrs);
             let stars = '';
@@ -1716,13 +2042,84 @@
                 lowerStats += `<p><strong>Ratio minutos por gol:</strong> ${formatNumber(ratioGls)}</p>`;
             }
 
+            const seasonLabel = SEASON_LABELS[currentSeason] || currentSeason;
+            const faceUrl = player.face || assignFace(player);
+
+            // ====== NEW: flag + position label ======
+            const flagCode = player.Nat.toLowerCase();
+            const flagUrl = flags[flagCode] || '';
+            const positionLabel = getPositionLabel(player.positions);
+
             document.getElementById('modalBody').innerHTML = `
-                <h2>${formatPlayerName(player.Name)}${starSpan}</h2>
+                <div class="player-header">
+                    <img class="player-face" src="${faceUrl}" alt="${formatPlayerName(player.Name)}" onerror="this.src='https://2img.net/i/imgur.com/7Y9zAkb.png'" />
+                    <div class="player-header-info">
+                        <div class="player-header-name-row">
+                            ${flagUrl ? `<img class="player-flag" src="${flagUrl}" alt="${player.Nat}" onerror="this.style.display='none'" />` : ''}
+                            <h2>${formatPlayerName(player.Name)}${starSpan}</h2>
+                        </div>
+                        ${positionLabel ? `<div class="player-position-label">${positionLabel}</div>` : ''}
+                    </div>
+                </div>
+                <div class="stats-section-title">Estadísticas temporada ${seasonLabel}</div>
                 <table>${tableHeaders}${tableContent}</table>
                 <div class="stats-grid">${lowerStats}</div>
+                <div id="historyContainer"></div>
             `;
             document.getElementById('myModal').style.display = 'flex';
+
+            try {
+                const history = await getPlayerHistory(player.Name);
+                if (history.length === 0) return;
+
+                const isGK = player.positions.includes('GK');
+                let historyHtml = '<div class="history-section-title">Historial</div>';
+                historyHtml += '<table class="history-table">';
+                historyHtml += '<tr><th>Temporada</th><th>Equipo</th><th>PJ</th>';
+                historyHtml += isGK ? '<th>GE</th>' : '<th>Gls</th>';
+                historyHtml += '<th>Asi</th><th>MVP</th></tr>';
+
+                // ====== NEW: totals accumulators ======
+                let totalGam = 0, totalGls = 0, totalCon = 0, totalAss = 0, totalMom = 0;
+
+                for (const h of history) {
+                    const seasonIsGK = h.positions && h.positions.includes('GK');
+                    historyHtml += `<tr><td>${h.season}</td><td>${h.team}</td><td>${formatNumber(h.gam)}</td>`;
+                    if (seasonIsGK) {
+                        historyHtml += `<td>${formatNumber(h.con)}</td>`;
+                        totalCon += parseInt(h.con) || 0;
+                    } else {
+                        historyHtml += `<td>${formatNumber(h.gls)}</td>`;
+                        totalGls += parseInt(h.gls) || 0;
+                    }
+                    historyHtml += `<td>${formatNumber(h.ass)}</td><td>${formatNumber(h.mom)}</td></tr>`;
+
+                    totalGam += parseInt(h.gam) || 0;
+                    totalAss += parseInt(h.ass) || 0;
+                    totalMom += parseInt(h.mom) || 0;
+                }
+
+                // ====== NEW: total row ======
+                historyHtml += '<tr class="history-total">';
+                historyHtml += '<td>Total</td><td></td>';
+                historyHtml += `<td>${formatNumber(totalGam)}</td>`;
+                historyHtml += isGK ? `<td>${formatNumber(totalCon)}</td>` : `<td>${formatNumber(totalGls)}</td>`;
+                historyHtml += `<td>${formatNumber(totalAss)}</td>`;
+                historyHtml += `<td>${formatNumber(totalMom)}</td>`;
+                historyHtml += '</tr>';
+
+                historyHtml += '</table>';
+
+                const container = document.getElementById('historyContainer');
+                if (container) container.innerHTML = historyHtml;
+            } catch (err) {
+                console.warn('No se pudo cargar el historial:', err);
+            }
         }
+
+        /* ============================================================
+           TEAM SQUAD MODAL
+           ============================================================ */
 
         function showTeamSquad(team, season = currentSeason) {
             let teamPlayers = seasonData[season] ? seasonData[season].filter(p => p.team === team) : players.filter(p => p.team === team);
@@ -1751,6 +2148,7 @@
             const stadiumUrl = stadia[team.toLowerCase()] || '';
             const seasonOptions = `
                 <select class="modal-season-select" id="modal-season-select">
+                    <option value="37" ${season==='37'?'selected':''}>Temp. 37 - Final</option>
                     <option value="37-mid" ${season==='37-mid'?'selected':''}>Temp. 37 - Intermedio</option>
                     <option value="37-start" ${season==='37-start'?'selected':''}>Temp. 37 - Inicio</option>
                     <option value="36" ${season==='36'?'selected':''}>Temp. 36 - Final</option>
@@ -1776,6 +2174,57 @@
                 showTeamSquad(team, newSeason);
             });
             document.getElementById('myModal').style.display = 'flex';
+        }
+
+        /* ============================================================
+           SEASON DATA LOADERS
+           ============================================================ */
+
+        async function loadSeason37Final() {
+            const url = 'https://www.tusoccermanager.com/h158-playerdbseason37-2-html';
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const preElement = doc.querySelector('pre');
+            if (!preElement) throw new Error('No se encontró la etiqueta <pre>');
+            const text = preElement.textContent;
+            const lines = text.split('\n');
+            const dateRegex = /(\d{2}\/\d{2}\/\d{4})/;
+            for (let i = lines.length - 1; i >= 0; i--) {
+                const match = lines[i].match(dateRegex);
+                if (match) { lastUpdateDate = match[0]; break; }
+            }
+            let firstHeaderIndex = -1;
+            for (let i = 0; i < lines.length; i++) { if (lines[i].trim().startsWith('Name')) { firstHeaderIndex = i; break; } }
+            if (firstHeaderIndex === -1) throw new Error('No se encontró la cabecera de jugadores');
+            const teamNames = [];
+            for (let i = 0; i < firstHeaderIndex; i++) { const line = lines[i].trim(); if (line) teamNames.push(line); }
+            const headerIndices = [];
+            for (let i = firstHeaderIndex; i < lines.length; i++) { if (lines[i].trim().startsWith('Name')) headerIndices.push(i); }
+            const newPlayers = [];
+            const numBlocks = Math.min(headerIndices.length, teamNames.length);
+            for (let b = 0; b < numBlocks; b++) {
+                const startIdx = headerIndices[b] + 2;
+                const endIdx = (b < numBlocks - 1) ? headerIndices[b + 1] : lines.length;
+                const team = teamNames[b];
+                for (let i = startIdx; i < endIdx; i++) {
+                    const line = lines[i].trim();
+                    if (!line || (line.includes('Name') && line.includes('Age') && line.includes('St'))) continue;
+                    const partes = line.split(/\s+/);
+                    if (partes.length === 27) {
+                        const playerData = {};
+                        headerFields.forEach((field, idx) => { playerData[field] = partes[idx]; });
+                        playerData.team = team;
+                        playerData.value = calculatePlayerValue(playerData);
+                        playerData.salary = calculateSalary(playerData);
+                        playerData.positions = getPlayerPosition(playerData);
+                        newPlayers.push(playerData);
+                    }
+                }
+            }
+            return newPlayers;
         }
 
         async function loadSeason37Mid() {
@@ -1910,6 +2359,9 @@
                 document.getElementById('loading').style.display = 'block';
                 document.getElementById('results').style.display = 'none';
             }
+
+            await loadFacesOnce();
+
             if (seasonData[season]) {
                 players = seasonData[season];
                 if (!silent) {
@@ -1923,7 +2375,7 @@
                     const nationalitySelect = document.getElementById('nationality-select');
                     nationalitySelect.innerHTML = '<option value="">Todos los países</option>';
                     Object.keys(nameToCodes).sort().forEach(name => { const opt = document.createElement('option'); opt.value = name; opt.textContent = name; opt.setAttribute('data-codes', nameToCodes[name].join(',')); nationalitySelect.appendChild(opt); });
-                    document.getElementById('update-date').textContent = lastUpdateDate ? `Última actualización: ${lastUpdateDate}` : '';
+                    document.getElementById('update-date').textContent = `Última actualización: ${FIXED_UPDATE_DATE}`;
                     filterPlayers();
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('results').style.display = 'grid';
@@ -1932,22 +2384,13 @@
             }
             try {
                 let newPlayers = [];
-                if (season === '37-mid') newPlayers = await loadSeason37Mid();
+                if (season === '37') newPlayers = await loadSeason37Final();
+                else if (season === '37-mid') newPlayers = await loadSeason37Mid();
                 else if (season === '37-start') newPlayers = await loadSeason37Start();
                 else if (season === '36') newPlayers = await loadSeason36();
                 else if (season === '36-start') newPlayers = await loadSeason36Start();
-                else if (season === 'current') newPlayers = [];
 
-                const faceResponse = await fetch('https://www.tusoccermanager.com/h88-facedb-html');
-                const faceText = await faceResponse.text();
-                const faceDoc = new DOMParser().parseFromString(faceText, 'text/html');
-                const facePre = faceDoc.querySelector('pre');
-                const faceContent = facePre ? facePre.textContent : faceText;
-                const faceLines = faceContent.split('\n');
-                faces = {};
-                faceLines.forEach(line => { const match = line.match(/^([^:]+):\s*(.+)$/); if (match) faces[match[1]] = match[2].trim(); });
-                const unknownFace = faces['Uknown'] || 'https://2img.net/i.imgur.com/7Y9zAkb.png';
-                newPlayers.forEach(p => { p.face = faces[p.Name] || unknownFace; });
+                newPlayers.forEach(p => { p.face = assignFace(p); });
 
                 seasonData[season] = newPlayers;
                 players = newPlayers;
@@ -1996,7 +2439,7 @@
                     stadiumLines.forEach(line => { const m = line.match(/^([^:]+):\s*(.+)$/); if (m) stadia[m[1].trim().toLowerCase()] = m[2].trim(); });
                 }
 
-                document.getElementById('update-date').textContent = lastUpdateDate ? `Última actualización: ${lastUpdateDate}` : '';
+                document.getElementById('update-date').textContent = `Última actualización: ${FIXED_UPDATE_DATE}`;
 
                 if (!window.positionSetupDone) { setupPositionCheckboxes(); window.positionSetupDone = true; }
                 setupAgeSlider(); setupAttributeSliders();
@@ -2012,7 +2455,14 @@
             }
         }
 
+        /* ============================================================
+           RENDERING (optimized with DocumentFragment + event delegation)
+           ============================================================ */
+
+        let currentFilteredPlayers = [];
+
         function render(filteredPlayers) {
+            currentFilteredPlayers = filteredPlayers;
             const results = document.getElementById('results');
             results.querySelectorAll('.card, .no-results').forEach(el => el.remove());
             document.getElementById('player-counter').textContent = `${formatNumber(filteredPlayers.length)} jugador${filteredPlayers.length !== 1 ? 'es' : ''}`;
@@ -2023,7 +2473,10 @@
                 results.appendChild(noRes);
                 return;
             }
-            filteredPlayers.forEach(player => {
+
+            const fragment = document.createDocumentFragment();
+
+            filteredPlayers.forEach((player, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 const badgeUrl = badges[player.team.toLowerCase()] || '';
@@ -2044,14 +2497,14 @@
                 if (sus > 0) status += `<span class="status-tag" title="Sancionado por ${sus} ${sus===1?'partido':'partidos'}">SAN</span>`;
 
                 card.innerHTML = `
-                    <div style="position:absolute;top:10px;left:10px;cursor:pointer;font-size:16px;" onclick='showPlayerStats(${JSON.stringify(player)})'>☰</div>
+                    <div class="card-menu-icon" data-index="${index}" title="Ver más">☰</div>
                     <div class="estimated-value">${formatNumber(player.value.toFixed(2))}M</div>
                     <div class="salary">${formatNumber(player.salary)}M</div>
-                    <img class="face" src="${player.face}" alt="${formattedName} face" onerror="this.src='https://2img.net/i.imgur.com/7Y9zAkb.png'" />
+                    <img class="face" src="${player.face}" alt="${formattedName} face" onerror="this.src='https://2img.net/i/imgur.com/7Y9zAkb.png'" />
                     <div class="info-block">
                         <img class="badge" src="${badgeUrl}" alt="${player.team} badge" onerror="this.style.display='none'" />
                         <div>
-                            <h3 title="Ver plantilla" onclick='showTeamSquad("${player.team}")'>${player.team}</h3>
+                            <h3 title="Ver plantilla" data-team="${player.team}">${player.team}</h3>
                             <h2>${formattedName}${status}</h2>
                             <p>${player.Age} años</p>
                             <div class="nationality">${flagUrl?`<img src="${flagUrl}" alt="${player.Nat} flag" onerror="this.style.display='none'"/>`:''} ${nationalityName}</div>
@@ -2063,9 +2516,28 @@
                         <div class="attr"><label>MF</label><span class="${highestAttributes.includes('Ps')?'highlight':''}">${player.Ps}</span><div class="experience">${formatNumber(player.PAb)}${pabArrow}</div></div>
                         <div class="attr"><label>FW</label><span class="${highestAttributes.includes('Sh')?'highlight':''}">${player.Sh}</span><div class="experience">${formatNumber(player.SAb)}${sabArrow}</div></div>
                     </div>`;
-                results.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            results.appendChild(fragment);
         }
+
+        // Event delegation for card interactions (performance)
+        document.getElementById('results').addEventListener('click', function(e) {
+            const menuIcon = e.target.closest('.card-menu-icon');
+            if (menuIcon) {
+                const index = parseInt(menuIcon.getAttribute('data-index'));
+                if (!isNaN(index) && currentFilteredPlayers[index]) {
+                    showPlayerStats(currentFilteredPlayers[index]);
+                }
+                return;
+            }
+            const teamHeader = e.target.closest('h3[data-team]');
+            if (teamHeader) {
+                showTeamSquad(teamHeader.getAttribute('data-team'));
+                return;
+            }
+        });
 
         function levenshtein(a, b) {
             const matrix = Array(b.length+1).fill(null).map(()=>Array(a.length+1).fill(null));
@@ -2254,7 +2726,7 @@
             arrow.classList.toggle('up');
         });
 
-        // Sidebar toggle con icono X
+        // Sidebar toggle
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle');
         sidebarToggle.addEventListener('click', () => {
