@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Buscador de jugadores - Tu Soccer Manager</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" />
     <style>
         :root {
             --sidebar-width: 40px;
@@ -23,15 +23,42 @@
             background-color: #1a1a1a;
             color: #ddd;
         }
+        /* ====== MODERN TITLE ====== */
         h1 {
             text-align: center;
+            font-weight: 800;
+            font-size: 2.4rem;
+            letter-spacing: -0.5px;
+            margin: 0 auto 10px;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 45%, #4299e1 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             color: #1a365d;
-            font-weight: 600;
-            margin-bottom: 10px;
-            transition: color 0.3s;
+            transition: filter 0.3s;
+            padding: 5px 10px;
+            width: fit-content;
+            max-width: 100%;
         }
         body.dark h1 {
+            background: linear-gradient(135deg, #a8c3e6 0%, #c0d4f0 45%, #4299e1 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             color: #a8c3e6;
+        }
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #1a365d, #4299e1);
+            margin: 12px auto 0;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+        body.dark h1::after {
+            background: linear-gradient(90deg, #a8c3e6, #4299e1);
         }
         .update-info {
             text-align: center;
@@ -1072,7 +1099,6 @@
         .history-table tr:last-child td {
             border-bottom: none;
         }
-        /* ====== NEW: Total row style ====== */
         .history-table tr.history-total td {
             border-top: 2px solid #1a365d;
             background: #eef3fa;
@@ -1331,6 +1357,11 @@
                 <option value="37-start">Temp. 37 - Inicio</option>
                 <option value="36">Temp. 36 - Final</option>
                 <option value="36-start">Temp. 36 - Inicio</option>
+                <option value="34-start">Temp. 34 - Inicio</option>
+                <option value="33-start">Temp. 33 - Inicio</option>
+                <option value="32-start">Temp. 32 - Inicio</option>
+                <option value="31-start">Temp. 31 - Inicio</option>
+                <option value="30-start">Temp. 30 - Inicio</option>
             </select>
             <button id="toggle-card-size" class="sidebar-link">Aumentar tarjetas</button>
             <button id="darkModeToggle" class="sidebar-link">Modo oscuro</button>
@@ -1662,7 +1693,6 @@
             return Object.keys(attributes).filter(pos => attributes[pos] === maxValue);
         }
 
-        // ====== NEW: position label helper ======
         function getPositionLabel(positions) {
             if (!positions || positions.length === 0) return '';
             const p = positions[0];
@@ -2000,13 +2030,17 @@
            MODAL: PLAYER STATS + HISTORY
            ============================================================ */
 
-        // ====== UPDATED: removed " - Final" suffix on final seasons ======
         const SEASON_LABELS = {
             '37': '37',
             '37-mid': '37 - Intermedio',
             '37-start': '37 - Inicio',
             '36': '36',
-            '36-start': '36 - Inicio'
+            '36-start': '36 - Inicio',
+            '34-start': '34 - Inicio',
+            '33-start': '33 - Inicio',
+            '32-start': '32 - Inicio',
+            '31-start': '31 - Inicio',
+            '30-start': '30 - Inicio'
         };
 
         async function showPlayerStats(player) {
@@ -2045,7 +2079,6 @@
             const seasonLabel = SEASON_LABELS[currentSeason] || currentSeason;
             const faceUrl = player.face || assignFace(player);
 
-            // ====== NEW: flag + position label ======
             const flagCode = player.Nat.toLowerCase();
             const flagUrl = flags[flagCode] || '';
             const positionLabel = getPositionLabel(player.positions);
@@ -2079,7 +2112,6 @@
                 historyHtml += isGK ? '<th>GE</th>' : '<th>Gls</th>';
                 historyHtml += '<th>Asi</th><th>MVP</th></tr>';
 
-                // ====== NEW: totals accumulators ======
                 let totalGam = 0, totalGls = 0, totalCon = 0, totalAss = 0, totalMom = 0;
 
                 for (const h of history) {
@@ -2099,7 +2131,6 @@
                     totalMom += parseInt(h.mom) || 0;
                 }
 
-                // ====== NEW: total row ======
                 historyHtml += '<tr class="history-total">';
                 historyHtml += '<td>Total</td><td></td>';
                 historyHtml += `<td>${formatNumber(totalGam)}</td>`;
@@ -2153,6 +2184,11 @@
                     <option value="37-start" ${season==='37-start'?'selected':''}>Temp. 37 - Inicio</option>
                     <option value="36" ${season==='36'?'selected':''}>Temp. 36 - Final</option>
                     <option value="36-start" ${season==='36-start'?'selected':''}>Temp. 36 - Inicio</option>
+                    <option value="34-start" ${season==='34-start'?'selected':''}>Temp. 34 - Inicio</option>
+                    <option value="33-start" ${season==='33-start'?'selected':''}>Temp. 33 - Inicio</option>
+                    <option value="32-start" ${season==='32-start'?'selected':''}>Temp. 32 - Inicio</option>
+                    <option value="31-start" ${season==='31-start'?'selected':''}>Temp. 31 - Inicio</option>
+                    <option value="30-start" ${season==='30-start'?'selected':''}>Temp. 30 - Inicio</option>
                 </select>`;
             document.getElementById('modalBody').innerHTML = `
                 <div class="team-header">
@@ -2274,32 +2310,69 @@
             return newPlayers;
         }
 
-        async function loadSeason37Start() {
-            const url = 'https://www.tusoccermanager.com/h131-playerdbseason37-1-html';
-            const response = await fetch(url); if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+        /* ============================================================
+           GENERIC "INICIO" SEASON LOADER
+           (used for 37-start, 36-start, 34-start, 33-start, 32-start, 31-start, 30-start)
+           ============================================================ */
+        async function loadStartSeason(url) {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
             const html = await response.text();
-            const parser = new DOMParser(); const doc = parser.parseFromString(html, 'text/html');
-            const preElement = doc.querySelector('pre'); if (!preElement) throw new Error('No se encontró <pre>');
-            const text = preElement.textContent; const lines = text.split('\n');
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const preElement = doc.querySelector('pre');
+            if (!preElement) throw new Error('No se encontró <pre>');
+            const text = preElement.textContent;
+            const lines = text.split('\n');
             const dateRegex = /(\d{2}\/\d{2}\/\d{4})/;
-            for (let i = lines.length - 1; i >= 0; i--) { const match = lines[i].match(dateRegex); if (match) { lastUpdateDate = match[0]; break; } }
-            let firstHeaderIndex = -1; for (let i = 0; i < lines.length; i++) { if (lines[i].trim().startsWith('Name')) { firstHeaderIndex = i; break; } }
+            for (let i = lines.length - 1; i >= 0; i--) {
+                const match = lines[i].match(dateRegex);
+                if (match) { lastUpdateDate = match[0]; break; }
+            }
+            let firstHeaderIndex = -1;
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].trim().startsWith('Name')) { firstHeaderIndex = i; break; }
+            }
             if (firstHeaderIndex === -1) throw new Error('No se encontró la cabecera');
-            const teamNames = []; for (let i = 0; i < firstHeaderIndex; i++) { const line = lines[i].trim(); if (line) teamNames.push(line); }
-            const headerIndices = []; for (let i = firstHeaderIndex; i < lines.length; i++) { if (lines[i].trim().startsWith('Name')) headerIndices.push(i); }
-            const newPlayers = []; const numBlocks = Math.min(headerIndices.length, teamNames.length);
+            const teamNames = [];
+            for (let i = 0; i < firstHeaderIndex; i++) {
+                const line = lines[i].trim();
+                if (line) teamNames.push(line);
+            }
+            const headerIndices = [];
+            for (let i = firstHeaderIndex; i < lines.length; i++) {
+                if (lines[i].trim().startsWith('Name')) headerIndices.push(i);
+            }
+            const newPlayers = [];
+            const numBlocks = Math.min(headerIndices.length, teamNames.length);
             for (let b = 0; b < numBlocks; b++) {
-                const startIdx = headerIndices[b] + 2; const endIdx = (b < numBlocks - 1) ? headerIndices[b + 1] : lines.length;
+                const startIdx = headerIndices[b] + 2;
+                const endIdx = (b < numBlocks - 1) ? headerIndices[b + 1] : lines.length;
                 const team = teamNames[b];
                 for (let i = startIdx; i < endIdx; i++) {
-                    const line = lines[i].trim(); if (!line || (line.includes('Name') && line.includes('Age'))) continue;
-                    const partes = line.split(/\s+/); if (partes.length === 27) {
-                        const playerData = {}; headerFields.forEach((f,idx) => { playerData[f] = partes[idx]; });
-                        playerData.team = team; playerData.value = calculatePlayerValue(playerData); playerData.salary = calculateSalary(playerData); playerData.positions = getPlayerPosition(playerData); newPlayers.push(playerData);
+                    const line = lines[i].trim();
+                    if (!line || (line.includes('Name') && line.includes('Age'))) continue;
+                    const partes = line.split(/\s+/);
+                    if (partes.length === 27) {
+                        const pd = {};
+                        headerFields.forEach((f, idx) => { pd[f] = partes[idx]; });
+                        pd.team = team;
+                        pd.value = calculatePlayerValue(pd);
+                        pd.salary = calculateSalary(pd);
+                        pd.positions = getPlayerPosition(pd);
+                        newPlayers.push(pd);
                     }
                 }
             }
             return newPlayers;
+        }
+
+        // Keep existing aliases for compatibility
+        async function loadSeason37Start() {
+            return loadStartSeason('https://www.tusoccermanager.com/h131-playerdbseason37-1-html');
+        }
+        async function loadSeason36Start() {
+            return loadStartSeason('https://www.tusoccermanager.com/h129-playerdbseason36-1-html');
         }
 
         async function loadSeason36() {
@@ -2318,32 +2391,6 @@
                 const startIdx=headerIndices[b]+2; const endIdx=(b<numBlocks-1)?headerIndices[b+1]:lines.length;
                 const team=teamNames[b];
                 for (let i=startIdx;i<endIdx;i++) {
-                    const line=lines[i].trim(); if(!line||(line.includes('Name')&&line.includes('Age'))) continue;
-                    const partes=line.split(/\s+/); if(partes.length===27){
-                        const pd={}; headerFields.forEach((f,idx)=>{pd[f]=partes[idx];});
-                        pd.team=team; pd.value=calculatePlayerValue(pd); pd.salary=calculateSalary(pd); pd.positions=getPlayerPosition(pd); newPlayers.push(pd);
-                    }
-                }
-            }
-            return newPlayers;
-        }
-
-        async function loadSeason36Start() {
-            const url = 'https://www.tusoccermanager.com/h129-playerdbseason36-1-html';
-            const response = await fetch(url); if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-            const html = await response.text(); const parser = new DOMParser(); const doc = parser.parseFromString(html, 'text/html');
-            const preElement = doc.querySelector('pre'); if (!preElement) throw new Error('No <pre>');
-            const text = preElement.textContent; const lines = text.split('\n');
-            const dateRegex = /(\d{2}\/\d{2}\/\d{4})/; for (let i=lines.length-1;i>=0;i--) { const m=lines[i].match(dateRegex); if(m){lastUpdateDate=m[0];break;} }
-            let firstHeaderIndex=-1; for(let i=0;i<lines.length;i++){if(lines[i].trim().startsWith('Name')){firstHeaderIndex=i;break;}}
-            if(firstHeaderIndex===-1) throw new Error('No cabecera');
-            const teamNames=[]; for(let i=0;i<firstHeaderIndex;i++){const l=lines[i].trim(); if(l) teamNames.push(l);}
-            const headerIndices=[]; for(let i=firstHeaderIndex;i<lines.length;i++){if(lines[i].trim().startsWith('Name')) headerIndices.push(i);}
-            const newPlayers=[]; const numBlocks=Math.min(headerIndices.length,teamNames.length);
-            for(let b=0;b<numBlocks;b++){
-                const startIdx=headerIndices[b]+2; const endIdx=(b<numBlocks-1)?headerIndices[b+1]:lines.length;
-                const team=teamNames[b];
-                for(let i=startIdx;i<endIdx;i++){
                     const line=lines[i].trim(); if(!line||(line.includes('Name')&&line.includes('Age'))) continue;
                     const partes=line.split(/\s+/); if(partes.length===27){
                         const pd={}; headerFields.forEach((f,idx)=>{pd[f]=partes[idx];});
@@ -2389,6 +2436,11 @@
                 else if (season === '37-start') newPlayers = await loadSeason37Start();
                 else if (season === '36') newPlayers = await loadSeason36();
                 else if (season === '36-start') newPlayers = await loadSeason36Start();
+                else if (season === '34-start') newPlayers = await loadStartSeason('https://www.tusoccermanager.com/h163-playerdbseason34-1-html');
+                else if (season === '33-start') newPlayers = await loadStartSeason('https://www.tusoccermanager.com/h162-playerdbseason33-1-html');
+                else if (season === '32-start') newPlayers = await loadStartSeason('https://www.tusoccermanager.com/h161-playerdbseason32-1-html');
+                else if (season === '31-start') newPlayers = await loadStartSeason('https://www.tusoccermanager.com/h160-playerdbseason31-1-html');
+                else if (season === '30-start') newPlayers = await loadStartSeason('https://www.tusoccermanager.com/h159-playerdbseason30-1-html');
 
                 newPlayers.forEach(p => { p.face = assignFace(p); });
 
