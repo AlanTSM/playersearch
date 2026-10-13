@@ -735,6 +735,7 @@
             background: #2c5282;
         }
         .slider-thumb {
+            touch-action: none;
             position: absolute;
             top: 50%;
             width: 20px;
@@ -873,6 +874,7 @@
         #mf-range { background: #ffc107; }
         #fw-range { background: #dc3545; }
         .attribute-slider-thumb {
+            touch-action: none;
             position: absolute;
             top: 50%;
             width: 16px;
@@ -1342,6 +1344,65 @@
         .card-menu-icon:hover {
             color: #e74c3c;
         }
+
+        /* ============================================================
+           RESPONSIVE / TOUCH (added): only applies below 1025px,
+           desktop styles above are untouched
+           ============================================================ */
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+        img { max-width: 100%; }
+        @media (max-width: 1024px) {
+            html, body { overflow-x: hidden; }
+            .sidebar-toggle { min-height: 44px; height: 44px; }
+            .sidebar-link, #season-select { min-height: 44px; font-size: 16px; }
+            .advanced-search-toggle { min-height: 44px; }
+            .team-selector, .nationality-selector, .value-selector, .filter-number-input,
+            .modal-season-select { min-height: 44px; font-size: 16px; }
+            .reset-button { min-width: 44px; width: 44px; min-height: 44px; height: 44px; font-size: 18px; }
+            .position-option { min-height: 44px; padding-top: 0; padding-bottom: 0; }
+            .position-option input { min-width: 22px; min-height: 22px; }
+            /* whole row (min 44px) is tappable: the label's invisible overlay covers it */
+            .position-option { position: relative; min-width: 44px; padding-left: 4px; padding-right: 4px; }
+            .position-option label { cursor: pointer; }
+            .position-option label::after { content: ''; position: absolute; inset: 0; }
+            /* invisible ~44px touch area around the slider handles (visual size unchanged) */
+            .slider-thumb::before, .attribute-slider-thumb::before {
+                content: ''; position: absolute; top: 50%; left: 50%;
+                width: 44px; height: 44px; transform: translate(-50%, -50%);
+                border-radius: 50%; background: transparent;
+            }
+            .reset-all-button { min-height: 44px; }
+            .experience-input { min-height: 44px; font-size: 16px; box-sizing: border-box; }
+            .search-clear { min-width: 44px; min-height: 44px; }
+            .close { min-width: 44px; min-height: 44px; text-align: center; line-height: 44px; }
+            .advanced-search-layout { flex-direction: column; gap: 15px; }
+            .attribute-filters-grid { grid-template-columns: repeat(2, 1fr); }
+            .age-filter { width: auto; box-sizing: border-box; }
+            .modal-content { box-sizing: border-box; max-height: 90vh; }
+            .squad-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; }
+            .team-header img[alt*="stadium"] { max-width: 100%; height: auto !important; }
+            .attr-tick-label { font-size: 9px; }
+            .tick-label { font-size: 10px; }
+        }
+        @media (max-width: 600px) {
+            body { padding: 12px; padding-left: calc(var(--sidebar-width) + 8px); }
+            h1 { font-size: 1.6rem; }
+            .search-container, .search-note, .advanced-search-container, #results { max-width: 100%; box-sizing: border-box; }
+            #search { box-sizing: border-box; }
+            .search-container { margin-bottom: 34px; }
+            .update-date { position: absolute; top: 100%; right: 4px; margin-top: 6px; }
+            .advanced-search-content { padding: 12px; }
+            .filter-row { display: grid; grid-template-columns: 1fr 44px; gap: 6px 8px; align-items: center; }
+            .filter-row label { grid-column: 1 / -1; margin-top: 4px; }
+            .filter-row select { width: 100%; min-width: 0; box-sizing: border-box; }
+            .filter-row .filter-number-input { grid-column: 1 / -1; width: 100%; box-sizing: border-box; }
+            .attribute-filters-grid { grid-template-columns: 1fr; }
+            #results, #results.small-cards { grid-template-columns: minmax(0, 1fr); }
+            .card { min-width: 0; box-sizing: border-box; }
+            .modal-content { width: 96%; padding: 14px; }
+            .team-stats p { font-size: 14px; }
+            .reset-button::after { left: auto; right: 0; transform: none; }
+        }
     </style>
 </head>
 <body>
@@ -1357,11 +1418,20 @@
                 <option value="37-start">Temp. 37 - Inicio</option>
                 <option value="36">Temp. 36 - Final</option>
                 <option value="36-start">Temp. 36 - Inicio</option>
+                <option value="35-start">Temp. 35 - Inicio</option>
                 <option value="34-start">Temp. 34 - Inicio</option>
                 <option value="33-start">Temp. 33 - Inicio</option>
                 <option value="32-start">Temp. 32 - Inicio</option>
                 <option value="31-start">Temp. 31 - Inicio</option>
                 <option value="30-start">Temp. 30 - Inicio</option>
+                <option value="29-old">Temp. 29</option>
+                <option value="28-old">Temp. 28</option>
+                <option value="27-old">Temp. 27</option>
+                <option value="26-old">Temp. 26</option>
+                <option value="25-old">Temp. 25</option>
+                <option value="24-old">Temp. 24</option>
+                <option value="23-old">Temp. 23</option>
+                <option value="22-old">Temp. 22</option>
             </select>
             <button id="toggle-card-size" class="sidebar-link">Aumentar tarjetas</button>
             <button id="darkModeToggle" class="sidebar-link">Modo oscuro</button>
@@ -1777,8 +1847,13 @@
 
             function setupThumbDrag(thumb, isMin) {
                 let dragging = false;
-                thumb.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
-                document.addEventListener('mousemove', e => {
+                // Pointer Events: one code path for mouse, touch and pen
+                thumb.addEventListener('pointerdown', e => {
+                    if (e.pointerType === 'mouse' && e.button !== 0) return;
+                    dragging = true; e.preventDefault(); e.stopPropagation();
+                    try { thumb.setPointerCapture(e.pointerId); } catch (_) {}
+                });
+                thumb.addEventListener('pointermove', e => {
                     if (!dragging) return;
                     const trackRect = sliderTrack.getBoundingClientRect();
                     let newPercent = ((e.clientX - trackRect.left) / trackRect.width) * 100;
@@ -1789,27 +1864,16 @@
                     updateRangeDisplay();
                     scheduleFilter();
                 });
-                document.addEventListener('mouseup', () => { dragging = false; });
-                thumb.addEventListener('touchstart', e => { dragging = true; e.preventDefault(); });
-                document.addEventListener('touchmove', e => {
-                    if (!dragging) return;
-                    const touch = e.touches[0];
-                    const trackRect = sliderTrack.getBoundingClientRect();
-                    let newPercent = ((touch.clientX - trackRect.left) / trackRect.width) * 100;
-                    newPercent = Math.max(0, Math.min(100, newPercent));
-                    const newValue = Math.round(minAge + (newPercent / 100) * (maxAge - minAge));
-                    if (isMin) { if (newValue < maxValue) { minValue = newValue; thumb.setAttribute('data-value', minValue); } }
-                    else { if (newValue > minValue) { maxValue = newValue; thumb.setAttribute('data-value', maxValue); } }
-                    updateRangeDisplay();
-                    scheduleFilter();
-                });
-                document.addEventListener('touchend', () => { dragging = false; });
+                const endDrag = e => { dragging = false; try { thumb.releasePointerCapture(e.pointerId); } catch (_) {} };
+                thumb.addEventListener('pointerup', endDrag);
+                thumb.addEventListener('pointercancel', endDrag);
+                thumb.addEventListener('lostpointercapture', () => { dragging = false; });
             }
 
             setupThumbDrag(thumbMin, true);
             setupThumbDrag(thumbMax, false);
             sliderTrack.parentElement.addEventListener('click', e => handleMove(e.clientX));
-            sliderTrack.parentElement.addEventListener('touchstart', e => handleMove(e.touches[0].clientX));
+            sliderTrack.parentElement.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' && !e.target.classList.contains('slider-thumb')) handleMove(e.clientX); });
             updateRangeDisplay();
         }
 
@@ -1856,8 +1920,13 @@
 
                 function setupThumbDrag(thumb, isMin) {
                     let dragging = false;
-                    thumb.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
-                    document.addEventListener('mousemove', e => {
+                    // Pointer Events: one code path for mouse, touch and pen
+                    thumb.addEventListener('pointerdown', e => {
+                        if (e.pointerType === 'mouse' && e.button !== 0) return;
+                        dragging = true; e.preventDefault(); e.stopPropagation();
+                        try { thumb.setPointerCapture(e.pointerId); } catch (_) {}
+                    });
+                    thumb.addEventListener('pointermove', e => {
                         if (!dragging) return;
                         const trackRect = sliderTrack.getBoundingClientRect();
                         let newPercent = ((e.clientX - trackRect.left) / trackRect.width) * 100;
@@ -1868,27 +1937,16 @@
                         updateRangeDisplay();
                         scheduleFilter();
                     });
-                    document.addEventListener('mouseup', () => { dragging = false; });
-                    thumb.addEventListener('touchstart', e => { dragging = true; e.preventDefault(); });
-                    document.addEventListener('touchmove', e => {
-                        if (!dragging) return;
-                        const touch = e.touches[0];
-                        const trackRect = sliderTrack.getBoundingClientRect();
-                        let newPercent = ((touch.clientX - trackRect.left) / trackRect.width) * 100;
-                        newPercent = Math.max(0, Math.min(100, newPercent));
-                        const newValue = Math.round(minAttr + (newPercent / 100) * (maxAttr - minAttr));
-                        if (isMin) { if (newValue < maxValue) { minValue = newValue; thumb.setAttribute('data-value', minValue); } }
-                        else { if (newValue > minValue) { maxValue = newValue; thumb.setAttribute('data-value', maxValue); } }
-                        updateRangeDisplay();
-                        scheduleFilter();
-                    });
-                    document.addEventListener('touchend', () => { dragging = false; });
+                    const endDrag = e => { dragging = false; try { thumb.releasePointerCapture(e.pointerId); } catch (_) {} };
+                    thumb.addEventListener('pointerup', endDrag);
+                    thumb.addEventListener('pointercancel', endDrag);
+                    thumb.addEventListener('lostpointercapture', () => { dragging = false; });
                 }
 
                 setupThumbDrag(thumbMin, true);
                 setupThumbDrag(thumbMax, false);
                 sliderContainer.addEventListener('click', e => handleMove(e.clientX));
-                sliderContainer.addEventListener('touchstart', e => handleMove(e.touches[0].clientX));
+                sliderContainer.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' && !e.target.classList.contains('attribute-slider-thumb')) handleMove(e.clientX); });
                 updateRangeDisplay();
             });
 
@@ -2036,6 +2094,7 @@
             '37-start': '37 - Inicio',
             '36': '36',
             '36-start': '36 - Inicio',
+            '35-start': '35 - Inicio',
             '34-start': '34 - Inicio',
             '33-start': '33 - Inicio',
             '32-start': '32 - Inicio',
@@ -2184,11 +2243,20 @@
                     <option value="37-start" ${season==='37-start'?'selected':''}>Temp. 37 - Inicio</option>
                     <option value="36" ${season==='36'?'selected':''}>Temp. 36 - Final</option>
                     <option value="36-start" ${season==='36-start'?'selected':''}>Temp. 36 - Inicio</option>
+                    <option value="35-start" ${season==='35-start'?'selected':''}>Temp. 35 - Inicio</option>
                     <option value="34-start" ${season==='34-start'?'selected':''}>Temp. 34 - Inicio</option>
                     <option value="33-start" ${season==='33-start'?'selected':''}>Temp. 33 - Inicio</option>
                     <option value="32-start" ${season==='32-start'?'selected':''}>Temp. 32 - Inicio</option>
                     <option value="31-start" ${season==='31-start'?'selected':''}>Temp. 31 - Inicio</option>
                     <option value="30-start" ${season==='30-start'?'selected':''}>Temp. 30 - Inicio</option>
+                    <option value="29-old" ${season==='29-old'?'selected':''}>Temp. 29</option>
+                    <option value="28-old" ${season==='28-old'?'selected':''}>Temp. 28</option>
+                    <option value="27-old" ${season==='27-old'?'selected':''}>Temp. 27</option>
+                    <option value="26-old" ${season==='26-old'?'selected':''}>Temp. 26</option>
+                    <option value="25-old" ${season==='25-old'?'selected':''}>Temp. 25</option>
+                    <option value="24-old" ${season==='24-old'?'selected':''}>Temp. 24</option>
+                    <option value="23-old" ${season==='23-old'?'selected':''}>Temp. 23</option>
+                    <option value="22-old" ${season==='22-old'?'selected':''}>Temp. 22</option>
                 </select>`;
             document.getElementById('modalBody').innerHTML = `
                 <div class="team-header">
@@ -2215,6 +2283,23 @@
         /* ============================================================
            SEASON DATA LOADERS
            ============================================================ */
+
+        /* ============================================================
+           CONFIG: OLD PLAYER DATABASES T22-T29 + T35
+           >>> REPLACE THE PLACEHOLDER URLs (hNNN) WITH THE REAL FORUM PAGES ONCE PUBLISHED <<<
+           Existing pages follow: https://www.tusoccermanager.com/h<id>-playerdbseason<XX>-<part>-html
+           ============================================================ */
+        const OLD_SEASON_DB_URLS = {
+            '35-start': 'https://www.tusoccermanager.com/h174-playerdbseason35-html',
+            '29-old': 'https://www.tusoccermanager.com/h173-playerdbseason29-html',
+            '28-old': 'https://www.tusoccermanager.com/h172-playerdbseason28-html',
+            '27-old': 'https://www.tusoccermanager.com/h171-playerdbseason27-html',
+            '26-old': 'https://www.tusoccermanager.com/h170-playerdbseason26-html',
+            '25-old': 'https://www.tusoccermanager.com/h169-playerdbseason25-html',
+            '24-old': 'https://www.tusoccermanager.com/h168-playerdbseason24-html',
+            '23-old': 'https://www.tusoccermanager.com/h167-playerdbseason23-html',
+            '22-old': 'https://www.tusoccermanager.com/h166-playerdbseason22-html',
+        };
 
         async function loadSeason37Final() {
             const url = 'https://www.tusoccermanager.com/h158-playerdbseason37-2-html';
@@ -2353,6 +2438,8 @@
                     const line = lines[i].trim();
                     if (!line || (line.includes('Name') && line.includes('Age'))) continue;
                     const partes = line.split(/\s+/);
+                    // Old DBs (e.g. T26) have short tables without stat columns: pad stats with 0 and Fit 100
+                    if (partes.length === 12) partes.push('0','0','0','0','0','0','0','0','0','0','0','0','0','0','100');
                     if (partes.length === 27) {
                         const pd = {};
                         headerFields.forEach((f, idx) => { pd[f] = partes[idx]; });
@@ -2441,6 +2528,7 @@
                 else if (season === '32-start') newPlayers = await loadStartSeason('https://www.tusoccermanager.com/h161-playerdbseason32-1-html');
                 else if (season === '31-start') newPlayers = await loadStartSeason('https://www.tusoccermanager.com/h160-playerdbseason31-1-html');
                 else if (season === '30-start') newPlayers = await loadStartSeason('https://www.tusoccermanager.com/h159-playerdbseason30-1-html');
+                else if (OLD_SEASON_DB_URLS[season]) newPlayers = await loadStartSeason(OLD_SEASON_DB_URLS[season]);
 
                 newPlayers.forEach(p => { p.face = assignFace(p); });
 
