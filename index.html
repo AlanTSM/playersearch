@@ -1038,7 +1038,7 @@
             background: white;
             padding: 20px;
             border-radius: 15px;
-            max-width: 600px;
+            max-width: 700px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -1061,6 +1061,34 @@
             border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: border-color 0.3s, box-shadow 0.3s;
         }
         body.dark .team-header img[alt*="stadium"] { border-color: #555; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+        /* ====== Team modal header + stats layout ====== */
+        .team-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-right: 30px;
+            margin-bottom: 10px;
+        }
+        .team-header h2 {
+            margin: 0;
+        }
+        .team-header .team-badge {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .team-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 16px;
+            margin: 10px 0;
+        }
+        .team-stats p {
+            margin: 2px 0;
+        }
 
         /* ====== History section styles ====== */
         .history-section-title {
@@ -1401,6 +1429,7 @@
             .card { min-width: 0; box-sizing: border-box; }
             .modal-content { width: 96%; padding: 14px; }
             .team-stats p { font-size: 14px; }
+            .team-stats { grid-template-columns: 1fr; }
             .reset-button::after { left: auto; right: 0; transform: none; }
         }
     </style>
@@ -1726,6 +1755,8 @@
             const agePenalty = age > 35 ? -ageGt35Penalty : (age > 30 ? -ageGt30Penalty : 0);
             let totalValue = base + ageBonus + secAttrBonus + expBonus + secExpTotalBonus + agePenalty;
             if (maxAttr >= 25) totalValue += (maxAttr - 24) * 10;
+            // Handicap para porteros: el valor se multiplica por 0,6 y se redondea a entero o ,5
+            if (positionIndex === 0) totalValue = Math.round(totalValue * 0.6 * 2) / 2;
             return Math.max(totalValue, 0);
         }
 
